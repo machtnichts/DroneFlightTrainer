@@ -39,7 +39,7 @@ public class Bot implements Comparable<Bot> {
 
 	public Bot clone() {
 		Bot bot = new Bot(pos,dir);
-		bot.color = shiftColor(new Color(color.getRGB()),55);
+		bot.color = shiftColor(new Color(color.getRGB()),5);
 		for (Thruster thru : trusters) {
 			bot.addTruster(((Thruster)thru).clone());
 		}

@@ -1,11 +1,15 @@
 package sandbox;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
 
 import utils.Vector2;
 import utils.Runnable;
@@ -15,10 +19,11 @@ public class Main {
 	public static Vector2 midpoint = new Vector2(0, 0);
 	public static List<Bot> population = new ArrayList<Bot>();
 	public static SimulationScreen screen;
-	public static Vector2 start = new Vector2(400,400);
-	static int survivalCount = 400;
+	public static Vector2 start = new Vector2(0,-600);
+	static int survivalCount = 500;
 	static int populationCount = 1000;
-	static int randomCount = 200;
+	static int randomCount =50;
+	static int gen = 0;
 	
 	// Buggs : Concurrent modifier in Simulation screen
 	public static Random random;
@@ -33,6 +38,10 @@ public class Main {
 			int currentTick = 0;
 			int genNumber = 0;
 			public void run() {
+				
+				int fast = shiftSlider.getValue();
+				for (int a = 0;a<fast;a++) {
+					
 				
 				boolean botsOnScreen = false;
 				int ind= 0;
@@ -55,26 +64,30 @@ public class Main {
 
 					for (int i = 0; i < bot.getThrusterCount(); i++) {
 
-						bot.getTruster(i).setCurrentTrust(res[i]*2F-1F);
+						bot.getTruster(i).setCurrentTrust(res[i]);
 					}
 				
 					
 					evaluateBot(bot);
 
 					Physics.calcPhysics(bot, 0.1D);
-					if (bot.getPos().distance(midpoint) < 1000) {
+					if (bot.getPos().distance(midpoint) < 600) {
 						botsOnScreen = true;
 					}
 				}
 				
-				if (currentTick > 100+genNumber*2  || !botsOnScreen) {
+				if (currentTick > 1000 || !botsOnScreen) {
 					currentTick = 0;
 					genNumber += 1;
-					doGenetic(1);
+					doGenetic(gen);
 					resetBots();
+					gen++;
+					textLabel.setText("Generation "+gen);
 				}
 				
 				currentTick++;
+				}
+				if (fast < 100)
 				screen.paint(screen.getGraphics());
 			}
 		};
@@ -92,18 +105,39 @@ public class Main {
 		
 	}
 	
+	static JSlider shiftSlider;
+	static JLabel textLabel;
 	public static SimulationScreen initScreen() {
-		SimulationScreen bs = new SimulationScreen();
-		JFrame f = new JFrame("Workshop");
-		f.add(bs);
-		f.setSize(1000, 1000);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setResizable(true);
-		f.setVisible(true);
-		f.setEnabled(true);
-		f.setAutoRequestFocus(true);
-		f.addKeyListener(bs);
-		f.pack();
+		   SimulationScreen bs = new SimulationScreen();
+	        JFrame f = new JFrame("Workshop");
+
+	        JPanel panel = new JPanel(new BorderLayout()); // Use BorderLayout for the panel
+
+	        shiftSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 1);
+	        shiftSlider.setMajorTickSpacing(5);
+	        shiftSlider.setMinorTickSpacing(1);
+	        shiftSlider.setPaintTicks(true);
+	        shiftSlider.setPaintLabels(true);
+	    
+	        textLabel = new JLabel("Your Text Here", JLabel.CENTER); // Replace "Your Text Here" with your desired text
+	        textLabel.setFont(textLabel.getFont().deriveFont(16.0f)); 
+	        panel.add(textLabel, BorderLayout.NORTH);
+	        // Add the slider to the SOUTH (bottom) of the panel
+	        panel.add(shiftSlider, BorderLayout.SOUTH);
+
+	        // Add the simulation screen to the CENTER of the panel
+	        panel.add(bs, BorderLayout.CENTER);
+
+	        f.add(panel);
+
+	        f.setSize(1000, 1000);
+	        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        f.setResizable(true);
+	        f.setVisible(true);
+	        f.setEnabled(true);
+	        f.setAutoRequestFocus(true);
+	        f.addKeyListener(bs);
+	        f.pack();
 		return bs;
 	}
 	
@@ -117,6 +151,9 @@ public class Main {
 	public static void evaluateBot(Bot b) {
 		// Wird jeden Schritt der Simulation ausgeführt
 		b.score += b.getPos().distance(midpoint)/1000F;
+		b.score += Math.abs(b.momentum)/10F;
+		b.score += Math.abs(b.velocity.getX())/10F;
+		b.score += Math.abs(b.velocity.getY())/10F;
 	}
 
 	public static Bot createBot() {
@@ -134,9 +171,10 @@ public class Main {
 
 	}
 	
+
 	public static void doGenetic(int genNumber) {
 		Collections.sort(population);
-
+	
 		
 	
 		List<Bot> nextPopulation = new ArrayList<Bot>();
@@ -152,8 +190,17 @@ public class Main {
 			Bot newBot = nextPopulation.get(i%survivalCount).clone();
 			
 			//newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
-			
-			newBot.neuralNet.mutateWeights(0.001F,1F,random);
+			double r = random.nextDouble();
+			if (r > 0.5) {
+				newBot.neuralNet.mutateWeights(0.001F,1F,random);
+			}
+			else if (r > 0.1){
+				newBot.neuralNet.mutateWeights(0.01F,1F,random);
+			}
+			else {
+				newBot.neuralNet.mutateWeights(0.1F,2F,random);
+			}
+		
 			
 			//net.softMutate(sigma);
 			nextPopulation.add(newBot);
