@@ -3,7 +3,6 @@ package sandbox;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.JFrame;
 
@@ -15,15 +14,13 @@ public class Main {
 	public static Vector2 midpoint = new Vector2(0, 0);
 	public static List<Bot> population = new ArrayList<Bot>();
 	public static SimulationScreen screen;
-	public static Vector2 start = new Vector2(400,400);
-	static int survivalCount = 400;
-	static int populationCount = 1000;
-	static int randomCount = 200;
+	public static Vector2 start = new Vector2(0,-200);
+	static int survivalCount = 1;
+	static int populationCount = 100;
+	static int randomCount = 1;
 	
 	// Buggs : Concurrent modifier in Simulation screen
-	public static Random random;
 	public static void main(String[] args) {
-		random = new Random();
 		initPopulation();
 		screen = initScreen();
 	
@@ -47,19 +44,32 @@ public class Main {
 					double[] input = new double[] { angle, xToTarget, yToTarget, bot.getVelocity().getX(),
 							bot.getVelocity().getY(), bot.getMomentum()};
 					
-				
-					double[] res = bot.neuralNet.process(input);
-					
-					
-	
+					//double[] input = new double[] { -0.1,-0.1,-0.1,-0.1,-0.1,-0.1};
+					double[] res = bot.neuralNet.doSth(input);
+					if (ind == 0) {
+						
+						System.out.println("");
+						for (double d : input) {
+						
+							System.out.print(d+ " ");
+						}
+						System.out.println(" OUT");
+						for (double d : res) {
+						
+							System.out.print(d+ " ");
+						}
+						
+					}
+						
+						ind++;
 
 					for (int i = 0; i < bot.getThrusterCount(); i++) {
 
-						bot.getTruster(i).setCurrentTrust(res[i]*2F-1F);
+						bot.getTruster(i).setCurrentTrust(res[i]/21D);
 					}
 				
 					
-					evaluateBot(bot);
+					//evaluateBot(bot);
 
 					Physics.calcPhysics(bot, 0.1D);
 					if (bot.getPos().distance(midpoint) < 1000) {
@@ -67,10 +77,10 @@ public class Main {
 					}
 				}
 				
-				if (currentTick > 100+genNumber*2  || !botsOnScreen) {
+				if (currentTick > 200  || !botsOnScreen) {
 					currentTick = 0;
 					genNumber += 1;
-					doGenetic(1);
+					//doGenetic(1);
 					resetBots();
 				}
 				
@@ -83,7 +93,6 @@ public class Main {
 
 	public static void resetBots() {
 		for (Bot bot : population) {
-			bot.score = 0;
 			bot.setPos(start);
 			bot.setDir(new Vector2(0,1));
 			bot.resetVelocity();
@@ -116,7 +125,7 @@ public class Main {
 
 	public static void evaluateBot(Bot b) {
 		// Wird jeden Schritt der Simulation ausgeführt
-		b.score += b.getPos().distance(midpoint)/1000F;
+		b.score += b.getPos().distance(midpoint);
 	}
 
 	public static Bot createBot() {
@@ -137,39 +146,44 @@ public class Main {
 	public static void doGenetic(int genNumber) {
 		Collections.sort(population);
 
-		
-	
 		List<Bot> nextPopulation = new ArrayList<Bot>();
 
-	
+
+		
 		for (int i = 0;i<survivalCount;i++) {
 			nextPopulation.add(population.get(i));
 		}
-	
 
 
 		for (int i = 0;i<populationCount-survivalCount-randomCount;i++) {
 			Bot newBot = nextPopulation.get(i%survivalCount).clone();
 			
-			//newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
-			
-			newBot.neuralNet.mutateWeights(0.001F,1F,random);
+			double genDoub = genNumber;
+			newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
+			if (Math.random() > 0.5F) {
+				newBot.neuralNet.mutate(4, 1D);
+			}
+			else 
+			if (Math.random() > 0.1F) {
+				newBot.neuralNet.mutate(1, 0.01F);
+			}
+			else {
+				newBot.neuralNet.mutate(10,2);
+			}
 			
 			//net.softMutate(sigma);
 			nextPopulation.add(newBot);
 		}
 		
-	
-		
-
-	
 		for (int i = 0;i<randomCount;i++) {
 			nextPopulation.add(createBot());
 		}
-		population = nextPopulation;
-		for (Bot b : population) {
+		
+		for (Bot b : nextPopulation) {
 			b.score = 0;
 		}
+		population = nextPopulation;
+		
 		
 	}
 }

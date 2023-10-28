@@ -39,27 +39,28 @@ public class SimulationScreen extends Canvas implements KeyListener{
 	
 			int disp = 100;
 		for (Bot bot : Main.population) {
-		
+			/*
 			disp -= 1;
 			if (disp <= 0) 
 				break;
-		
-		
-			g2d.setColor(bot.color);
+				*/
+			int i = bot.neuralNet.gen*5;
+			Color c = 	new Color(Color.HSBtoRGB(((float)i)/1000, 1F, 0.8F));
+			g2d.setColor(c);
 			drawOval(g2d, bot.getPos().mult(disp_scale), RAD);
 			g2d.setColor(Color.GREEN);
 			drawOval(g2d, bot.getAbsoluteCenter().mult(disp_scale), 4);
 			g2d.setColor(Color.PINK);
 			drawOval(g2d, bot.getAbsoluteCenterOfMass().mult(disp_scale), 4);
 			
-			g2d.setColor(bot.color);
+			g2d.setColor(c);
 			
 			drawLine(g2d,Vector2.add( bot.getPos().mult(disp_scale), (new Vector2(bot.getAngle())).getNormalized().mult(-RAD)),Vector2.add( bot.getPos(), (new Vector2(bot.getAngle())).getNormalized().mult(RAD)).mult(disp_scale) );
 			for (Thruster t : bot.getAllTrusters()) {
 				Vector2 pos = t.getAbsolutePos();
 				//Vector2 ruler = Vector2.turnDeg(new Vector2(0, SQR), Vector2.getAngle(new Vector2(0, 1),t.getDirection()));
 				Vector2 ruler = t.getAbsoluteDirection().getNormalized().mult(SQR);
-				g2d.setColor(bot.color);
+				g2d.setColor(c);
 			
 				drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale), Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale));
 				drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale), Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale));

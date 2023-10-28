@@ -1,11 +1,7 @@
 package sandbox;
 
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Random;
 
-import neural.NeuralNetwork;
-import neural.NeuralNetwork.ActivationFunction;
 import utils.Vector2;
 
 public class Bot implements Comparable<Bot> {
@@ -18,8 +14,6 @@ public class Bot implements Comparable<Bot> {
 	double weight;
 	double totalWeight;
 	double score = 0;
-	public Color color = new Color((int) (Math.random() * 1000000000));
-	public int test = (int) (Math.random() * 1000000000);
 	
 	ArrayList<Thruster> trusters = new ArrayList<Thruster>();
 	NeuralNetwork neuralNet;
@@ -39,12 +33,11 @@ public class Bot implements Comparable<Bot> {
 
 	public Bot clone() {
 		Bot bot = new Bot(pos,dir);
-		bot.color = shiftColor(new Color(color.getRGB()),55);
 		for (Thruster thru : trusters) {
 			bot.addTruster(((Thruster)thru).clone());
 		}
 		
-		bot.neuralNet = neuralNet.clone();
+		bot.neuralNet = new NeuralNetwork(neuralNet.toString());
 		
 		return bot;
 	}
@@ -162,9 +155,7 @@ public class Bot implements Comparable<Bot> {
 		return wt;
 	}
 	public void calcNeuralNet() {
-		//new NeuralNetworkOld(new int[] {6,10,10,10,getThrusterCount()}
-		neuralNet = new NeuralNetwork(6, 2, 10,getThrusterCount());
-	
+		neuralNet = new NeuralNetwork(new int[] {6,10,10,10,getThrusterCount()});
 	}
 	
 	
@@ -214,34 +205,15 @@ public class Bot implements Comparable<Bot> {
 	public double getMomentum() {
 		return momentum;
 	}
-	
-	 public static Color shiftColor(Color originalColor, int maxShiftAmount) {
-	        Random rand = new Random();
 
-	        int red = originalColor.getRed();
-	        int green = originalColor.getGreen();
-	        int blue = originalColor.getBlue();
-
-	        // Generate random shifts for each RGB component
-	        int redShift = rand.nextInt(maxShiftAmount * 2) - maxShiftAmount;
-	        int greenShift = rand.nextInt(maxShiftAmount * 2) - maxShiftAmount;
-	        int blueShift = rand.nextInt(maxShiftAmount * 2) - maxShiftAmount;
-
-	        // Apply the shifts to the original color
-	        red = Math.max(0, Math.min(255, red + redShift));
-	        green = Math.max(0, Math.min(255, green + greenShift));
-	        blue = Math.max(0, Math.min(255, blue + blueShift));
-
-	        return new Color(red, green, blue);
-	    }
 	
 	@Override
 	public int compareTo(Bot other) {
 		if (other.score > score) {
-			return -1;
+			return 1;
 		}
 		if (other.score < score) {
-			return 1;
+			return -1;
 		}
 		return 0;
 		
