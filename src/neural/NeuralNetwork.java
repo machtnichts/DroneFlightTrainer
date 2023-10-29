@@ -140,9 +140,9 @@ public class NeuralNetwork implements Cloneable
 	
 	public double[] process(double[] inputArray)
 	{
-		preProcess(inputArray);
+		//preProcess(inputArray);
 		if(inputArray.length != inputNodes) throw new IllegalArgumentException("Input must have " + inputNodes + " element" + (inputNodes == 1 ? "" : "s"));
-
+		/*
 		for(int i = 0; i < inputNodes; i++)
 		{
 			if(Math.abs(inputArray[i]) > 2)
@@ -150,6 +150,7 @@ public class NeuralNetwork implements Cloneable
 				System.err.println("Index " + i + " is a bit too out-there");
 			}
 		}
+		*/
 		
 		Mat input = Mat.fromArray(inputArray);
 

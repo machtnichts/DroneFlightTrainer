@@ -19,15 +19,15 @@ public class Main {
 	public static Vector2 midpoint = new Vector2(0, 0);
 	public static List<Bot> population = new ArrayList<Bot>();
 	public static SimulationScreen screen;
-	public static Vector2 start = new Vector2(0,-600);
-	static int survivalCount = 500;
-	static int populationCount = 1000;
-	static int randomCount =50;
+	public static Vector2 start = new Vector2(0,0);
+	static int survivalCount = 40;
+	static int populationCount = 100;
+	static int randomCount =5;
 	static int gen = 0;
 	
 	// Buggs : Concurrent modifier in Simulation screen
 	public static Random random;
-	public static void main(String[] args) {
+	public static void main(String[] args) {  
 		random = new Random();
 		initPopulation();
 		screen = initScreen();
@@ -48,8 +48,8 @@ public class Main {
 				for (Bot bot : population) {
 
 					double angle = (Vector2.SignedAngle(bot.getDir(), new Vector2(0, 1))) / 180;
-					double xToTarget = (bot.getPos().getX() - midpoint.getX()) / 390;
-					double yToTarget = (bot.getPos().getY() - midpoint.getY()) / 390;
+					double xToTarget = (bot.getPos().getX() - midpoint.getX())/1000D ;
+					double yToTarget = (bot.getPos().getY() - midpoint.getY())/1000D ;
 				
 					
 			
@@ -68,21 +68,22 @@ public class Main {
 					}
 				
 					
-					evaluateBot(bot);
+					evaluateBot(bot,currentTick);
 
 					Physics.calcPhysics(bot, 0.1D);
-					if (bot.getPos().distance(midpoint) < 600) {
+					if (bot.getPos().distance(midpoint) < 9000) {
 						botsOnScreen = true;
 					}
 				}
 				
-				if (currentTick > 1000 || !botsOnScreen) {
+				if (currentTick > 500 || !botsOnScreen) {
 					currentTick = 0;
 					genNumber += 1;
 					doGenetic(gen);
 					resetBots();
+					textLabel.setText("Generation "+gen +" | Best Score "+ lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
 					gen++;
-					textLabel.setText("Generation "+gen);
+					midpoint = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
 				}
 				
 				currentTick++;
@@ -94,6 +95,8 @@ public class Main {
 	
 	}
 
+	static Bot lastBest;
+	static double lastScore;
 	public static void resetBots() {
 		for (Bot bot : population) {
 			bot.score = 0;
@@ -148,12 +151,20 @@ public class Main {
 		}
 	}
 
-	public static void evaluateBot(Bot b) {
+	public static void evaluateBot(Bot b,int tick) {
 		// Wird jeden Schritt der Simulation ausgeführt
-		b.score += b.getPos().distance(midpoint)/1000F;
-		b.score += Math.abs(b.momentum)/10F;
-		b.score += Math.abs(b.velocity.getX())/10F;
-		b.score += Math.abs(b.velocity.getY())/10F;
+	
+		
+		b.score -= (b.getPos().distance(midpoint))/1000F;
+		
+		
+		//b.score += Math.abs(b.momentum);
+		double deg = (Vector2.SignedAngle(b.getDir(), new Vector2(0, -1))/180)*2;
+		//b.score +=  (deg*deg) *10;
+		
+		//b.score += Math.abs(b.velocity.getX())/10F;
+		//b.score += Math.abs(b.velocity.getY())/10F;
+	
 	}
 
 	public static Bot createBot() {
@@ -162,10 +173,10 @@ public class Main {
 
 		Bot bot = new Bot(start,upDirection);
 
-		bot.addTruster(new Thruster(new Vector2(60, 0), new Vector2(0, -1), 250, 5));
-		bot.addTruster(new Thruster(new Vector2(-60, 0), new Vector2(0, -1), 250, 5));
+		bot.addTruster(new Thruster(new Vector2(60, 0), new Vector2(0, -1), 150, 5));
+		bot.addTruster(new Thruster(new Vector2(-60, 0), new Vector2(0, -1), 150, 5));
 		
-		
+
 		bot.assemble();
 		return bot;
 
@@ -175,8 +186,8 @@ public class Main {
 	public static void doGenetic(int genNumber) {
 		Collections.sort(population);
 	
-		
-	
+		lastBest = population.get(0);
+		lastScore = population.get(0).score;
 		List<Bot> nextPopulation = new ArrayList<Bot>();
 
 	
@@ -191,16 +202,11 @@ public class Main {
 			
 			//newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
 			double r = random.nextDouble();
-			if (r > 0.5) {
-				newBot.neuralNet.mutateWeights(0.001F,1F,random);
+			newBot.neuralNet.mutateWeights(newBot.mutationChance,newBot.mutationPower,random);
+			if (r > 0.8) {
+				newBot.mutateMutation(random);
 			}
-			else if (r > 0.1){
-				newBot.neuralNet.mutateWeights(0.01F,1F,random);
-			}
-			else {
-				newBot.neuralNet.mutateWeights(0.1F,2F,random);
-			}
-		
+			
 			
 			//net.softMutate(sigma);
 			nextPopulation.add(newBot);
