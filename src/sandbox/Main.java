@@ -41,15 +41,13 @@ public class Main {
 				
 				int fast = shiftSlider.getValue();
 				for (int a = 0;a<fast;a++) {
-					
-				
-				boolean botsOnScreen = false;
-				int ind= 0;
+
 				for (Bot bot : population) {
 
+				
 					double angle = (Vector2.SignedAngle(bot.getDir(), new Vector2(0, 1))) / 180;
-					double xToTarget = (bot.getPos().getX() - midpoint.getX())/1000D ;
-					double yToTarget = (bot.getPos().getY() - midpoint.getY())/1000D ;
+					double xToTarget = (bot.getPos().getX() - midpoint.getX())/500D ;
+					double yToTarget = (bot.getPos().getY() - midpoint.getY())/500D ;
 				
 					
 			
@@ -71,17 +69,17 @@ public class Main {
 					evaluateBot(bot,currentTick);
 
 					Physics.calcPhysics(bot, 0.1D);
-					if (bot.getPos().distance(midpoint) < 9000) {
-						botsOnScreen = true;
-					}
+				
 				}
 				
-				if (currentTick > 500 || !botsOnScreen) {
+				if (currentTick > 500) {
 					currentTick = 0;
 					genNumber += 1;
-					doGenetic(gen);
 					resetBots();
-					textLabel.setText("Generation "+gen +" | Best Score "+ lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
+					doGenetic(gen);
+					textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
+	
+				
 					gen++;
 					midpoint = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
 				}
@@ -99,11 +97,12 @@ public class Main {
 	static double lastScore;
 	public static void resetBots() {
 		for (Bot bot : population) {
+			bot.lastScore = (bot.lastScore * bot.iterations + bot.score)/ (double)(bot.iterations+1D);
+			bot.iterations += 1;
 			bot.score = 0;
 			bot.setPos(start);
 			bot.setDir(new Vector2(0,1));
 			bot.resetVelocity();
-
 		}
 		
 	}
@@ -184,10 +183,12 @@ public class Main {
 	
 
 	public static void doGenetic(int genNumber) {
+
+		
 		Collections.sort(population);
 	
 		lastBest = population.get(0);
-		lastScore = population.get(0).score;
+
 		List<Bot> nextPopulation = new ArrayList<Bot>();
 
 	

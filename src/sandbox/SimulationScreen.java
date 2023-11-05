@@ -44,40 +44,46 @@ public class SimulationScreen extends Canvas implements KeyListener{
 			if (disp <= 0) 
 				break;
 		
-		
-			g2d.setColor(bot.color);
-			drawOval(g2d, bot.getPos().mult(disp_scale), RAD);
-			g2d.setColor(Color.GREEN);
-			drawOval(g2d, bot.getAbsoluteCenter().mult(disp_scale), 4);
-			g2d.setColor(Color.PINK);
-			drawOval(g2d, bot.getAbsoluteCenterOfMass().mult(disp_scale), 4);
+			drawBot(bot,bot.color,g2d);
 			
-			g2d.setColor(bot.color);
-			
-			drawLine(g2d,Vector2.add( bot.getPos().mult(disp_scale), (new Vector2(bot.getAngle())).getNormalized().mult(-RAD)),Vector2.add( bot.getPos(), (new Vector2(bot.getAngle())).getNormalized().mult(RAD)).mult(disp_scale) );
-			for (Thruster t : bot.getAllTrusters()) {
-				Vector2 pos = t.getAbsolutePos();
-				//Vector2 ruler = Vector2.turnDeg(new Vector2(0, SQR), Vector2.getAngle(new Vector2(0, 1),t.getDirection()));
-				Vector2 ruler = t.getAbsoluteDirection().getNormalized().mult(SQR);
-				g2d.setColor(bot.color);
-			
-				drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale), Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale));
-				drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale), Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale));
-				drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale),Vector2.add(pos ,Vector2.turnDeg(ruler, -150)).mult(disp_scale));
-				drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, -150)).mult(disp_scale),Vector2.add(pos ,Vector2.turnDeg(ruler, 150)).mult(disp_scale));
-				drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, 30)).mult(disp_scale),Vector2.add(pos ,Vector2.turnDeg(ruler, 150)).mult(disp_scale));
-				Vector2 top = Vector2.add(pos, Vector2.add(Vector2.turnDeg(ruler, -150), Vector2.turnDeg(ruler, 150)).mult(0.5));
-				//Vector2 top = pos;
-				drawLine(g2d,Vector2.add(Vector2.add(bot.getPos().mult(-1),top).getNormalized().mult(RAD), bot.getPos()).mult(disp_scale), top.mult(disp_scale));
-				int uga = (int)(255*t.getCurrentTrust());
-				g2d.setColor(new Color(255,255-uga,0));
-				drawLine(g2d,pos.mult(disp_scale), Vector2.add(pos ,ruler.mult((t.getCurrentTrust()*t.getMaxTrust())/100)).mult(disp_scale));
-			}
 		}
-
+		drawBot(Main.population.get(0),Color.white,g2d);
+	
 		
 		g.drawImage(bi, 0, 0, null);
 		
+	}
+	
+	
+	private void drawBot(Bot bot,Color c,Graphics2D g2d) {
+		g2d.setColor(c);
+		drawOval(g2d, bot.getPos().mult(disp_scale), RAD);
+		g2d.setColor(Color.GREEN);
+		drawOval(g2d, bot.getAbsoluteCenter().mult(disp_scale), 4);
+		g2d.setColor(Color.PINK);
+		drawOval(g2d, bot.getAbsoluteCenterOfMass().mult(disp_scale), 4);
+		
+		g2d.setColor(c);
+		
+		drawLine(g2d,Vector2.add( bot.getPos().mult(disp_scale), (new Vector2(bot.getAngle())).getNormalized().mult(-RAD)),Vector2.add( bot.getPos(), (new Vector2(bot.getAngle())).getNormalized().mult(RAD)).mult(disp_scale) );
+		for (Thruster t : bot.getAllTrusters()) {
+			Vector2 pos = t.getAbsolutePos();
+			//Vector2 ruler = Vector2.turnDeg(new Vector2(0, SQR), Vector2.getAngle(new Vector2(0, 1),t.getDirection()));
+			Vector2 ruler = t.getAbsoluteDirection().getNormalized().mult(SQR);
+			g2d.setColor(c);
+		
+			drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale), Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale));
+			drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale), Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale));
+			drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, -30)).mult(disp_scale),Vector2.add(pos ,Vector2.turnDeg(ruler, -150)).mult(disp_scale));
+			drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, -150)).mult(disp_scale),Vector2.add(pos ,Vector2.turnDeg(ruler, 150)).mult(disp_scale));
+			drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, 30)).mult(disp_scale),Vector2.add(pos ,Vector2.turnDeg(ruler, 150)).mult(disp_scale));
+			Vector2 top = Vector2.add(pos, Vector2.add(Vector2.turnDeg(ruler, -150), Vector2.turnDeg(ruler, 150)).mult(0.5));
+			//Vector2 top = pos;
+			drawLine(g2d,Vector2.add(Vector2.add(bot.getPos().mult(-1),top).getNormalized().mult(RAD), bot.getPos()).mult(disp_scale), top.mult(disp_scale));
+			int uga = (int)(255*t.getCurrentTrust());
+			g2d.setColor(new Color(255,255-uga,0));
+			drawLine(g2d,pos.mult(disp_scale), Vector2.add(pos ,ruler.mult((t.getCurrentTrust()*t.getMaxTrust())/100)).mult(disp_scale));
+		}
 	}
 	
 	private void drawLine(Graphics2D g2d, Vector2 v1,Vector2 v2) {

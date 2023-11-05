@@ -17,9 +17,11 @@ public class Bot implements Comparable<Bot> {
 	double momentum;
 	double weight;
 	double totalWeight;
+	double lastScore = 0;
 	double score = 0;
 	public Color color = new Color((int) (Math.random() * 1000000000));
 	public int test = (int) (Math.random() * 1000000000);
+	int iterations = 0;
 	
 	ArrayList<Thruster> trusters = new ArrayList<Thruster>();
 	NeuralNetwork neuralNet;
@@ -49,6 +51,9 @@ public class Bot implements Comparable<Bot> {
 
 	public Bot clone() {
 		Bot bot = new Bot(pos,dir);
+		bot.score = score;
+		bot.lastScore = lastScore;
+		bot.iterations = iterations;
 		bot.mutationChance = mutationChance;
 		bot.mutationPower = mutationPower;
 		bot.color = shiftColor(new Color(color.getRGB()),5);
@@ -175,8 +180,7 @@ public class Bot implements Comparable<Bot> {
 	}
 	public void calcNeuralNet() {
 		//new NeuralNetworkOld(new int[] {6,10,10,10,getThrusterCount()}
-		neuralNet = new NeuralNetwork(6, 12, 5,getThrusterCount());
-	
+		neuralNet = new NeuralNetwork(6, 1, 6,getThrusterCount());
 	}
 	
 	
@@ -249,10 +253,10 @@ public class Bot implements Comparable<Bot> {
 	
 	@Override
 	public int compareTo(Bot other) {
-		if (other.score > score) {
+		if (other.lastScore > lastScore) {
 			return 1;
 		}
-		if (other.score < score) {
+		if (other.lastScore < lastScore) {
 			return -1;
 		}
 		return 0;

@@ -140,7 +140,7 @@ public class NeuralNetwork implements Cloneable
 	
 	public double[] process(double[] inputArray)
 	{
-		//preProcess(inputArray);
+		sigmoidProcess(inputArray);
 		if(inputArray.length != inputNodes) throw new IllegalArgumentException("Input must have " + inputNodes + " element" + (inputNodes == 1 ? "" : "s"));
 		/*
 		for(int i = 0; i < inputNodes; i++)
@@ -159,14 +159,16 @@ public class NeuralNetwork implements Cloneable
 			input = weights[i - 1].mult(input).add(biases[i - 1]);
 		}
 		
+	//sigmoidProcess(input.toArray());
 		return input.toArray();
 	}
 	
 	
-	public void preProcess(double[] inputs) {
+	public double[] sigmoidProcess(double[] inputs) {
 		for (int i = 0;i< inputs.length; i++) {
 			inputs[i] = sigmoid(inputs[i]);
 		}
+		return inputs;
 	}
 	
 	public static double sigmoid(double x) {
