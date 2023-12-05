@@ -20,8 +20,8 @@ public class Bot implements Comparable<Bot> {
 	double totalWeight;
 	double lastScore = 0;
 	double score = 0;
-	public Color color = new Color((int) (Math.random() * 1000000000));
-	public int test = (int) (Math.random() * 1000000000);
+	public Color color = Color.getHSBColor((float) Math.random(), 1, 0.8F);
+
 	int iterations = 0;
 	
 	ArrayList<Thruster> trusters = new ArrayList<Thruster>();
@@ -57,7 +57,7 @@ public class Bot implements Comparable<Bot> {
 		bot.iterations = iterations;
 		bot.mutationChance = mutationChance;
 		bot.mutationPower = mutationPower;
-		bot.color = shiftColor(new Color(color.getRGB()),5);
+		bot.color = shiftHue(color, 0.1F);
 		for (Thruster thru : trusters) {
 			bot.addTruster(((Thruster)thru).clone());
 		}
@@ -242,9 +242,9 @@ public class Bot implements Comparable<Bot> {
 	        int blue = originalColor.getBlue();
 
 	        // Generate random shifts for each RGB component
-	        int redShift = rand.nextInt(maxShiftAmount * 2) - maxShiftAmount;
-	        int greenShift = rand.nextInt(maxShiftAmount * 2) - maxShiftAmount;
-	        int blueShift = rand.nextInt(maxShiftAmount * 2) - maxShiftAmount;
+	        int redShift = rand.nextInt(maxShiftAmount * 2+1) - maxShiftAmount;
+	        int greenShift = rand.nextInt(maxShiftAmount * 2+1) - maxShiftAmount;
+	        int blueShift = rand.nextInt(maxShiftAmount * 2+1) - maxShiftAmount;
 
 	        // Apply the shifts to the original color
 	        red = Math.max(0, Math.min(255, red + redShift));
@@ -265,5 +265,23 @@ public class Bot implements Comparable<Bot> {
 		return 0;
 		
 	}
+	
+	public static Color shiftHue(Color originalColor, float hueShift) {
+
+        float[] hsb = Color.RGBtoHSB(
+                originalColor.getRed(),
+                originalColor.getGreen(),
+                originalColor.getBlue(),
+                null);
+
+
+        float newHue = (hsb[0] + hueShift) % 1.0f;
+        if (newHue < 0) {
+            newHue += 1.0f;
+        }
+
+
+        return Color.getHSBColor(newHue, hsb[1], hsb[2]);
+    }
 
 }
