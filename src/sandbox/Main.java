@@ -19,7 +19,7 @@ public class Main {
 	public static Vector2 midpoint = new Vector2(0, 0);
 	public static List<Bot> population = new ArrayList<Bot>();
 	public static SimulationScreen screen;
-	public static Vector2 start = new Vector2(0,0);
+	public static Vector2 start = new Vector2(0,-200);
 	static int survivalCount = 40;
 	static int populationCount = 100;
 	static int randomCount =5;
@@ -81,7 +81,7 @@ public class Main {
 	
 				
 					gen++;
-					midpoint = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
+					//midpoint = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
 				}
 				
 				currentTick++;
