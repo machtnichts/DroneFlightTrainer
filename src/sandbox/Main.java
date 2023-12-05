@@ -12,14 +12,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
-import neural.NeuralNetwork;
+
 import neural.NeuralNetworkSimple;
 import utils.Vector2;
+import workshop.SandboxSettings;
 import utils.Runnable;
 
 public class Main {
 
-	public static Vector2 midpoint = new Vector2(0, 0);
+
 	public static List<Bot> population = new ArrayList<Bot>();
 	public static SimulationScreen screen;
 	public static Vector2 start = new Vector2(0,-200);
@@ -49,8 +50,8 @@ public class Main {
 
 				
 					double angle = (Vector2.SignedAngle(bot.getDir(), new Vector2(0, 1))) / 180;
-					double xToTarget = (bot.getPos().getX() - midpoint.getX())/500D ;
-					double yToTarget = (bot.getPos().getY() - midpoint.getY())/500D ;
+					double xToTarget = (bot.getPos().getX() - SandboxSettings.botGoalPosition.getX())/500D;
+					double yToTarget = (bot.getPos().getY() - SandboxSettings.botGoalPosition.getY())/500D;
 				
 					
 			
@@ -76,6 +77,8 @@ public class Main {
 				}
 				
 				if (currentTick > 500) {
+					
+					System.out.println(""+ population.get(0).getAbsoluteCenter().distance(SandboxSettings.botGoalPosition));
 					currentTick = 0;
 					genNumber += 1;
 					resetBots();
@@ -84,7 +87,7 @@ public class Main {
 	
 				
 					gen++;
-					//midpoint = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
+					SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
 				}
 				
 				currentTick++;
@@ -149,7 +152,7 @@ public class Main {
 
 	public static void initPopulation() {
 		for (int i = 0;i<populationCount;i++) {
-			population.add(createBot());
+			population.add(SandboxSettings.createBot());
 		}
 	}
 
@@ -157,7 +160,7 @@ public class Main {
 		// Wird jeden Schritt der Simulation ausgeführt
 	
 		
-		b.score -= (b.getPos().distance(midpoint))/1000F;
+		b.score -= (b.getPos().distance(SandboxSettings.botGoalPosition)* b.getPos().distance(SandboxSettings.botGoalPosition))/1000F;
 		
 		
 		//b.score += Math.abs(b.momentum);
@@ -169,26 +172,7 @@ public class Main {
 	
 	}
 
-	public static Bot createBot() {
 
-		Vector2 upDirection = new Vector2(0, 1);
-
-		Bot bot = new Bot(start,upDirection);
-		/*
-		bot.addTruster(new Thruster(new Vector2(60, 0), new Vector2(0, -1), 150, 5));
-		bot.addTruster(new Thruster(new Vector2(-60, 0), new Vector2(0, -1), 150, 5));
-		*/
-		Vector2 ruler = new Vector2(0,65);
-		for (int i = 360;i > 0;i -= 360/6) {
-			bot.addTruster(new Thruster(Vector2.turnDeg(ruler, i), Vector2.turnDeg(ruler, i+90), 105, 5));
-			
-		}
-
-		bot.assemble();
-		return bot;
-
-	}
-	
 
 	public static void doGenetic(int genNumber) {
 
@@ -226,7 +210,7 @@ public class Main {
 
 	
 		for (int i = 0;i<randomCount;i++) {
-			nextPopulation.add(createBot());
+			nextPopulation.add(SandboxSettings.createBot());
 		}
 		population = nextPopulation;
 		for (Bot b : population) {

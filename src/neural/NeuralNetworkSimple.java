@@ -2,6 +2,8 @@ package neural;
 
 public class NeuralNetworkSimple implements Cloneable{
 
+	// Simple neural net with a input and an output layer
+	
 	int inputLayerSize;
 	int outputLayerSize;
 	public double[] weights;

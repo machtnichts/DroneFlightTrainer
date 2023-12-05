@@ -3,9 +3,6 @@ package sandbox;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
-
-import neural.NeuralNetwork;
-import neural.NeuralNetwork.ActivationFunction;
 import neural.NeuralNetworkSimple;
 import utils.Vector2;
 

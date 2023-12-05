@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 
 
 import utils.Vector2;
+import workshop.SandboxSettings;
 
 public class SimulationScreen extends Canvas implements KeyListener{
 	
@@ -32,8 +33,8 @@ public class SimulationScreen extends Canvas implements KeyListener{
 	
 		BufferedImage bi = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2d = (Graphics2D) bi.getGraphics();
-		g2d.setColor(Color.red);
-		drawOval(g2d, Main.midpoint, 5);
+		g2d.setColor(Color.green);
+		drawOval(g2d, SandboxSettings.botGoalPosition.mult(disp_scale), 5);
 		
 		
 	
