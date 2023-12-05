@@ -53,16 +53,10 @@ public class Main {
 					double xToTarget = (bot.getPos().getX() - SandboxSettings.botGoalPosition.getX())/500D;
 					double yToTarget = (bot.getPos().getY() - SandboxSettings.botGoalPosition.getY())/500D;
 				
-					
-			
 					double[] input = new double[] { angle, xToTarget, yToTarget, bot.getVelocity().getX(),
 							bot.getVelocity().getY(), bot.getMomentum()};
 					
-				
 					double[] res = bot.neuralNet.calculate(input);
-					
-					
-	
 
 					for (int i = 0; i < bot.getThrusterCount(); i++) {
 
@@ -70,7 +64,7 @@ public class Main {
 					}
 				
 					
-					evaluateBot(bot,currentTick);
+					geneticAlgorithim.evaluateBot(bot);
 
 					Physics.calcPhysics(bot, 0.1D);
 				
@@ -103,8 +97,8 @@ public class Main {
 
 	static Bot lastBest;
 	static double lastScore;
+	
 	public static void resetBots() {
-		
 		for (Bot bot : geneticAlgorithim.population) {
 			bot.lastScore = (bot.lastScore * bot.iterations + bot.score)/ (double)(bot.iterations+1D);
 			bot.iterations += 1;
@@ -113,7 +107,6 @@ public class Main {
 			bot.setDir(new Vector2(0,1));
 			bot.resetVelocity();
 		}
-		
 	}
 	
 	static JSlider shiftSlider;
@@ -122,25 +115,24 @@ public class Main {
 		   SimulationScreen bs = new SimulationScreen();
 	        JFrame f = new JFrame("Workshop");
 
-	        JPanel panel = new JPanel(new BorderLayout()); // Use BorderLayout for the panel
-
+	        JPanel panel = new JPanel(new BorderLayout());
+	        
 	        shiftSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 1);
 	        shiftSlider.setMajorTickSpacing(5);
 	        shiftSlider.setMinorTickSpacing(1);
 	        shiftSlider.setPaintTicks(true);
 	        shiftSlider.setPaintLabels(true);
 	    
-	        textLabel = new JLabel("Your Text Here", JLabel.CENTER); // Replace "Your Text Here" with your desired text
+	        textLabel = new JLabel("Your Text Here", JLabel.CENTER);
 	        textLabel.setFont(textLabel.getFont().deriveFont(16.0f)); 
 	        panel.add(textLabel, BorderLayout.NORTH);
-	        // Add the slider to the SOUTH (bottom) of the panel
+
 	        panel.add(shiftSlider, BorderLayout.SOUTH);
 
-	        // Add the simulation screen to the CENTER of the panel
+	  
 	        panel.add(bs, BorderLayout.CENTER);
 
 	        f.add(panel);
-
 	        f.setSize(1000, 1000);
 	        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        f.setResizable(true);
@@ -155,21 +147,7 @@ public class Main {
 
 	
 
-	public static void evaluateBot(Bot b,int tick) {
-		// Wird jeden Schritt der Simulation ausgeführt
-	
-		
-		b.score -= (b.getPos().distance(SandboxSettings.botGoalPosition)* b.getPos().distance(SandboxSettings.botGoalPosition))/1000F;
-		
-		
-		//b.score += Math.abs(b.momentum);
-		double deg = (Vector2.SignedAngle(b.getDir(), new Vector2(0, -1))/180)*2;
-		//b.score +=  (deg*deg) *10;
-		
-		//b.score += Math.abs(b.velocity.getX())/10F;
-		//b.score += Math.abs(b.velocity.getY())/10F;
-	
-	}
+
 
 
 	

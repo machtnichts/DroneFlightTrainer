@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import sandbox.Bot;
+import utils.Vector2;
 
 public class GeneticAlgorithim {
 
@@ -99,4 +100,7 @@ public class GeneticAlgorithim {
 		// Well then, change some weights around
 		// If you don't want to you don't have to use the mutationChance and mutationPower
 	}
+	
+	
+
 }
