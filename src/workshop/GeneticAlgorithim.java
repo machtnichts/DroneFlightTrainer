@@ -22,9 +22,11 @@ public class GeneticAlgorithim {
 			population.add(SandboxSettings.createBot());
 		}
 	}
-	
+	/*
+	 * Gets called for every Bot in every frame of the simulation
+	 */
 	public void evaluateBot(Bot b) {
-		b.score -= (b.getPos().distance(SandboxSettings.botGoalPosition)* b.getPos().distance(SandboxSettings.botGoalPosition))/1000F;
+		b.score -= (b.getPos().distance(SandboxSettings.botGoalPosition))/1000F;
 	}
 	
 	

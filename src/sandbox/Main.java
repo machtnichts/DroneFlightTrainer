@@ -1,12 +1,14 @@
 package sandbox;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,6 +30,8 @@ public class Main {
 	public static Vector2 start = new Vector2(0,-200);
 	public static GeneticAlgorithim geneticAlgorithim = new GeneticAlgorithim();
 	static int gen = 0;
+	public static ArrayList<Double> plotScores = new ArrayList<Double>(); 
+	public static Scatterplot plot;
 	
 	// Buggs : Concurrent modifier in Simulation screen
 	public static Random random;
@@ -37,10 +41,11 @@ public class Main {
 		screen = initScreen();
 	
 	
-	
 		new Runnable(0, 1) {
 			int currentTick = 0;
 			int genNumber = 0;
+			Vector2 targetVel = new Vector2(0,0);
+			
 			public void run() {
 				
 				int fast = shiftSlider.getValue();
@@ -69,21 +74,42 @@ public class Main {
 					Physics.calcPhysics(bot, 0.1D);
 				
 				}
-				if (currentTick % 300 == 0) {
-					SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 700,(random.nextDouble()*2-1) * 700);
+				if (SandboxSettings.target ==  TargetSetting.CHANGE_TARGET_DURING_RUN) {
+					if (currentTick % 300 == 0) {
+						SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 700,(random.nextDouble()*2-1) * 700);
+					}
 				}
+				if (SandboxSettings.target ==  TargetSetting.CANT_CATCH_ME) {
+					if (currentTick % 300 == 0) {
+						targetVel = new Vector2(0,0);
+						SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 700,(random.nextDouble()*2-1) * 700);
+					}
+					
+					targetVel = targetVel.add(new Vector2(random.nextDouble()*2-1,random.nextDouble()*2-1).mult(0.1F));
+					SandboxSettings.botGoalPosition = SandboxSettings.botGoalPosition.add(targetVel);
+					if (SandboxSettings.botGoalPosition.magnitude() > 800) {
+						targetVel = new Vector2(0,0);
+						SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
+					}
+					
+				}
+				
 				if (currentTick > 500+ genNumber*2) {
 					
-					
+					if (plot != null) {
+						plot.setData(plotScores);
+						plot.update();
+					}
 					currentTick = 0;
 					genNumber += 1;
 					resetBots();
 					geneticAlgorithim.calculateNextPopulation(gen);
-					//textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
-	
-				
+					plotScores.add(lastBest.lastScore);
+					textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
 					gen++;
-					//SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
+					
+					if (SandboxSettings.target ==  TargetSetting.CHANGE_TARGET_EACH_RUN)
+					SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
 				}
 				
 				currentTick++;
@@ -99,6 +125,7 @@ public class Main {
 	static double lastScore;
 	
 	public static void resetBots() {
+		lastBest = geneticAlgorithim.population.get(0);
 		for (Bot bot : geneticAlgorithim.population) {
 			bot.lastScore = (bot.lastScore * bot.iterations + bot.score)/ (double)(bot.iterations+1D);
 			bot.iterations += 1;
@@ -131,7 +158,17 @@ public class Main {
 
 	  
 	        panel.add(bs, BorderLayout.CENTER);
+	        JButton button = new JButton("Plot score");
+	        button.addActionListener(e -> generatePlot());
 
+	        // Use FlowLayout for the panel containing the button
+	        JPanel buttonPanel = new JPanel(new FlowLayout());
+	        buttonPanel.add(button);
+
+	        panel.add(buttonPanel, BorderLayout.WEST);
+
+	        panel.add(bs, BorderLayout.CENTER);
+	        
 	        f.add(panel);
 	        f.setSize(1000, 1000);
 	        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -144,11 +181,21 @@ public class Main {
 		return bs;
 	}
 	
+	
+	public static void generatePlot() {
+		
+		   double[] array = new double[plotScores.size()];
 
+	        // Copy elements from ArrayList to the array
+	        for (int i = 0; i < plotScores.size(); i++) {
+	            array[i] = plotScores.get(i);
+	        }
+	        plot = new Scatterplot(array);
+	}
 	
 
 
-
+	
 
 	
 	
