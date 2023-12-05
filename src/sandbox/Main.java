@@ -11,6 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 
+import neural.NeuralNetwork;
+import neural.NeuralNetworkSimple;
 import utils.Vector2;
 import utils.Runnable;
 
@@ -55,7 +57,7 @@ public class Main {
 							bot.getVelocity().getY(), bot.getMomentum()};
 					
 				
-					double[] res = bot.neuralNet.process(input);
+					double[] res = bot.neuralNet.calculate(input);
 					
 					
 	
@@ -81,7 +83,7 @@ public class Main {
 	
 				
 					gen++;
-					//midpoint = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
+					midpoint = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
 				}
 				
 				currentTick++;
@@ -203,7 +205,7 @@ public class Main {
 			
 			//newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
 			double r = random.nextDouble();
-			newBot.neuralNet.mutateWeights(newBot.mutationChance,newBot.mutationPower,random);
+			mutateWeights(newBot);
 			if (r > 0.8) {
 				newBot.mutateMutation(random);
 			}
@@ -225,5 +227,14 @@ public class Main {
 			b.score = 0;
 		}
 		
+	}
+	
+	
+	public static void mutateWeights(Bot bot) {
+		for (int i = 0; i < bot.neuralNet.weights.length;i++) {
+			if (random.nextDouble() < bot.mutationChance) {
+				bot.neuralNet.weights[i] += ((random.nextDouble()*2)-1D)* bot.mutationPower;
+			}
+		}
 	}
 }

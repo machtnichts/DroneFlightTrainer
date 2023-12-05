@@ -6,6 +6,7 @@ import java.util.Random;
 
 import neural.NeuralNetwork;
 import neural.NeuralNetwork.ActivationFunction;
+import neural.NeuralNetworkSimple;
 import utils.Vector2;
 
 public class Bot implements Comparable<Bot> {
@@ -24,7 +25,7 @@ public class Bot implements Comparable<Bot> {
 	int iterations = 0;
 	
 	ArrayList<Thruster> trusters = new ArrayList<Thruster>();
-	NeuralNetwork neuralNet;
+	NeuralNetworkSimple neuralNet;
 	
 	double mutationChance = 0.5;
 	double mutationPower = 1;
@@ -180,7 +181,9 @@ public class Bot implements Comparable<Bot> {
 	}
 	public void calcNeuralNet() {
 		//new NeuralNetworkOld(new int[] {6,10,10,10,getThrusterCount()}
-		neuralNet = new NeuralNetwork(6, 1, 6,getThrusterCount());
+		//neuralNet = new NeuralNetwork(6, 1, 6,getThrusterCount());
+
+		neuralNet = new NeuralNetworkSimple(6,getThrusterCount());
 	}
 	
 	
