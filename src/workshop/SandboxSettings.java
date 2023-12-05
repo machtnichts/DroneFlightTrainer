@@ -1,6 +1,7 @@
 package workshop;
 
 import sandbox.Bot;
+import sandbox.TargetSetting;
 import sandbox.Thruster;
 import utils.Vector2;
 
@@ -9,8 +10,7 @@ public class SandboxSettings {
 
 	public static Vector2 botSpawnPosition = new Vector2(0,0);
 	public static Vector2 botGoalPosition = new Vector2(0,0);
-	
-	
+	public static TargetSetting target = TargetSetting.CHANGE_TARGET_DURING_RUN;
 	
 	
 	public static Bot createBot() {
@@ -24,13 +24,13 @@ public class SandboxSettings {
 		bot.addTruster(new Thruster(new Vector2(-60, 0), new Vector2(0, -1), 150, 5));
 	
 		/*
-		 * Cofiguration for spinning drone
+		  //Cofiguration for spinning drone
 		Vector2 ruler = new Vector2(0,65);
 		for (int i = 360;i > 0;i -= 360/6) {
-			bot.addTruster(new Thruster(Vector2.turnDeg(ruler, i), Vector2.turnDeg(ruler, i+90), 105, 5));
+			bot.addTruster(new Thruster(Vector2.turnDeg(ruler, i), Vector2.turnDeg(ruler, i+90), 305, 5));
 			
 		}
-		*/
+	 	*/
 
 		bot.assemble();
 		return bot;

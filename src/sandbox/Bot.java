@@ -16,16 +16,16 @@ public class Bot implements Comparable<Bot> {
 	double weight;
 	double totalWeight;
 	double lastScore = 0;
-	double score = 0;
+	public double score = 0;
 	public Color color = Color.getHSBColor((float) Math.random(), 1, 0.8F);
 
 	int iterations = 0;
 	
 	ArrayList<Thruster> trusters = new ArrayList<Thruster>();
-	NeuralNetworkSimple neuralNet;
+	public NeuralNetworkSimple neuralNet;
 	
-	double mutationChance = 0.5;
-	double mutationPower = 1;
+	public double mutationChance = 0.5;
+	public double mutationPower = 1;
 	
 	public void mutateMutation(Random rand) {
 		mutationChance += (rand.nextDouble()*2-1)/10D;

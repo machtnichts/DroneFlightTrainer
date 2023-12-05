@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 
 
 import utils.Vector2;
+import workshop.GeneticAlgorithim;
 import workshop.SandboxSettings;
 
 public class SimulationScreen extends Canvas implements KeyListener{
@@ -39,7 +40,7 @@ public class SimulationScreen extends Canvas implements KeyListener{
 		
 	
 			int disp = 100;
-		for (Bot bot : Main.population) {
+		for (Bot bot : Main.geneticAlgorithim.population) {
 		
 			disp -= 1;
 			if (disp <= 0) 
@@ -48,7 +49,7 @@ public class SimulationScreen extends Canvas implements KeyListener{
 			drawBot(bot,bot.color,g2d);
 			
 		}
-		drawBot(Main.population.get(0),Color.white,g2d);
+		drawBot(Main.geneticAlgorithim.population.get(0),Color.white,g2d);
 	
 		
 		g.drawImage(bi, 0, 0, null);

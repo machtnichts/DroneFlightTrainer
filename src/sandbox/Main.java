@@ -15,29 +15,29 @@ import javax.swing.JSlider;
 
 import neural.NeuralNetworkSimple;
 import utils.Vector2;
+import workshop.GeneticAlgorithim;
 import workshop.SandboxSettings;
 import utils.Runnable;
 
 public class Main {
 
 
-	public static List<Bot> population = new ArrayList<Bot>();
+	
 	public static SimulationScreen screen;
+
 	public static Vector2 start = new Vector2(0,-200);
-	static int survivalCount = 40;
-	static int populationCount = 100;
-	static int randomCount =5;
+	public static GeneticAlgorithim geneticAlgorithim = new GeneticAlgorithim();
 	static int gen = 0;
 	
 	// Buggs : Concurrent modifier in Simulation screen
 	public static Random random;
 	public static void main(String[] args) {  
 		random = new Random();
-		initPopulation();
+		geneticAlgorithim.initPopulation();
 		screen = initScreen();
 	
 	
-		System.out.println("NET "+population.get(0).neuralNet);
+	
 		new Runnable(0, 1) {
 			int currentTick = 0;
 			int genNumber = 0;
@@ -46,7 +46,7 @@ public class Main {
 				int fast = shiftSlider.getValue();
 				for (int a = 0;a<fast;a++) {
 
-				for (Bot bot : population) {
+				for (Bot bot : geneticAlgorithim.population) {
 
 				
 					double angle = (Vector2.SignedAngle(bot.getDir(), new Vector2(0, 1))) / 180;
@@ -75,19 +75,21 @@ public class Main {
 					Physics.calcPhysics(bot, 0.1D);
 				
 				}
-				
-				if (currentTick > 500) {
+				if (currentTick % 300 == 0) {
+					SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 700,(random.nextDouble()*2-1) * 700);
+				}
+				if (currentTick > 500+ genNumber*2) {
 					
-					System.out.println(""+ population.get(0).getAbsoluteCenter().distance(SandboxSettings.botGoalPosition));
+					
 					currentTick = 0;
 					genNumber += 1;
 					resetBots();
-					doGenetic(gen);
-					textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
+					geneticAlgorithim.calculateNextPopulation(gen);
+					//textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
 	
 				
 					gen++;
-					SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
+					//SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
 				}
 				
 				currentTick++;
@@ -102,7 +104,8 @@ public class Main {
 	static Bot lastBest;
 	static double lastScore;
 	public static void resetBots() {
-		for (Bot bot : population) {
+		
+		for (Bot bot : geneticAlgorithim.population) {
 			bot.lastScore = (bot.lastScore * bot.iterations + bot.score)/ (double)(bot.iterations+1D);
 			bot.iterations += 1;
 			bot.score = 0;
@@ -150,11 +153,7 @@ public class Main {
 	}
 	
 
-	public static void initPopulation() {
-		for (int i = 0;i<populationCount;i++) {
-			population.add(SandboxSettings.createBot());
-		}
-	}
+	
 
 	public static void evaluateBot(Bot b,int tick) {
 		// Wird jeden Schritt der Simulation ausgeführt
@@ -173,58 +172,6 @@ public class Main {
 	}
 
 
-
-	public static void doGenetic(int genNumber) {
-
-		
-		Collections.sort(population);
-	
-		lastBest = population.get(0);
-
-		List<Bot> nextPopulation = new ArrayList<Bot>();
-
-	
-		for (int i = 0;i<survivalCount;i++) {
-			nextPopulation.add(population.get(i));
-		}
-	
-
-
-		for (int i = 0;i<populationCount-survivalCount-randomCount;i++) {
-			Bot newBot = nextPopulation.get(i%survivalCount).clone();
-			
-			//newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
-			double r = random.nextDouble();
-			mutateWeights(newBot);
-			if (r > 0.8) {
-				newBot.mutateMutation(random);
-			}
-			
-			
-			//net.softMutate(sigma);
-			nextPopulation.add(newBot);
-		}
-		
-	
-		
-
-	
-		for (int i = 0;i<randomCount;i++) {
-			nextPopulation.add(SandboxSettings.createBot());
-		}
-		population = nextPopulation;
-		for (Bot b : population) {
-			b.score = 0;
-		}
-		
-	}
 	
 	
-	public static void mutateWeights(Bot bot) {
-		for (int i = 0; i < bot.neuralNet.weights.length;i++) {
-			if (random.nextDouble() < bot.mutationChance) {
-				bot.neuralNet.weights[i] += ((random.nextDouble()*2)-1D)* bot.mutationPower;
-			}
-		}
-	}
 }
