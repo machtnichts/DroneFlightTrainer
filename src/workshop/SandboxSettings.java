@@ -11,8 +11,8 @@ public class SandboxSettings {
 
 	public static Vector2 botSpawnPosition = new Vector2(0,0);
 	public static Vector2 botGoalPosition = new Vector2(0,-400);
-	public static TargetSetting targetSetting = TargetSetting.CHANGE_TARGET_DURING_RUN;
-	public static ScoreSetting scoreSetting = ScoreSetting.BASIC_SCORE;
+	public static TargetSetting targetSetting = TargetSetting.CANT_CATCH_ME;
+	public static ScoreSetting scoreSetting = ScoreSetting.AVERAGED_SCORE;
 	
 	public static Bot createBot() {
 

@@ -78,11 +78,11 @@ public class Scatterplot {
 			return;
     	
         g.drawString(""+getMin(yData), 60, HEIGHT - 40);
-        g.drawString(""+getMax(yData), 60, 50);
+        g.drawString(""+0, 60, 50);
         // Draw data points
         for (int i = 0; i < xData.length; i++) {
             int x = MARGIN + (int) ((xData[i] - getMin(xData)) / (getMax(xData) - getMin(xData)) * xAxisLength);
-            int y = HEIGHT - MARGIN - (int) ((yData[i] - getMin(yData)) / (getMax(yData) - getMin(yData)) * yAxisLength);
+            int y = MARGIN +(int) ((yData[i] ) / ( getMin(yData)) * yAxisLength);
 
             g.setColor(color);
             g.fillOval(x - 3, y -3, 6, 6);

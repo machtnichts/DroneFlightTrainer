@@ -38,10 +38,20 @@ public class GeneticAlgorithim {
 		
 		
 		// Create slightly altered copies of the best ones
+		//calcNextBasic();
+		calcNextBasic();
+		/*
+
+	*/
+	
+	}
+
 		
+		
+	public void calcNextStochastic() {
 		List<Bot> nextPopulation = new ArrayList<Bot>();
 
-	
+		
 		for (int i = 0;i<populationSize;i++) {
 			float survivalChance = (1F- ((float)i/(float)populationSize))/2F;
 			
@@ -64,7 +74,15 @@ public class GeneticAlgorithim {
 			//net.softMutate(sigma);
 			nextPopulation.add(newBot);
 		}
-		/*
+		population = (ArrayList<Bot>) nextPopulation;
+	}
+	public void calcNextBasic() {
+		List<Bot> nextPopulation = new ArrayList<Bot>();
+		int survivorCount = populationSize/3;
+		int randomCount = populationSize/8;
+		for (int i = 0;i<survivorCount;i++) {
+			nextPopulation.add(population.get(i));
+		}
 		for (int i = 0;i<populationSize-survivorCount-randomCount;i++) {
 			Bot newBot = nextPopulation.get(i%survivorCount).clone();
 			
@@ -88,14 +106,7 @@ public class GeneticAlgorithim {
 			nextPopulation.add(SandboxSettings.createBot());
 		}
 		population = (ArrayList<Bot>) nextPopulation;
-	*/
-		population = (ArrayList<Bot>) nextPopulation;
 	}
-
-		
-		
-	
-	
 	public void mutateBot(Bot bot) {
 		Random random = new Random();
 		for (int i = 0; i < bot.neuralNet.weights.length;i++) {
