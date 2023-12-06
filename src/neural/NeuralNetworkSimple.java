@@ -6,6 +6,7 @@ public class NeuralNetworkSimple implements Cloneable{
 	
 	int inputLayerSize;
 	int outputLayerSize;
+
 	public double[] weights;
 	
 	public NeuralNetworkSimple(int inputLayerSize,int outputLayerSize) {

@@ -39,8 +39,7 @@ public class Main {
 		random = new Random();
 		geneticAlgorithim.initPopulation();
 		screen = initScreen();
-	
-	
+
 		new Runnable(0, 1) {
 			int currentTick = 0;
 			int genNumber = 0;
@@ -97,7 +96,7 @@ public class Main {
 					SandboxSettings.botGoalPosition = Vector2.turnDeg(SandboxSettings.botGoalPosition, 0.5F);
 				}
 				
-				if (currentTick > 500+ gen*2) {
+				if (currentTick > SandboxSettings.simulationSteps + gen * SandboxSettings.additionalSimulationStepsPerGeneration) {
 					calculateLastScore();
 			
 					currentTick = 0;
@@ -120,11 +119,12 @@ public class Main {
 					else {
 						plotScores.add(lastBest.score);
 						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.score + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
-						
 					}
 					
 					gen++;
 					resetBots();
+					if (SandboxSettings.targetSetting ==  TargetSetting.MOVE_CIRCULAR)
+						SandboxSettings.botGoalPosition = Vector2.turnDeg(SandboxSettings.botGoalPosition, Math.random()*360F);
 					
 					if (SandboxSettings.targetSetting ==  TargetSetting.CHANGE_TARGET_EACH_RUN)
 					SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
@@ -153,7 +153,7 @@ public class Main {
 			bot.iterations += 1;
 			bot.score = 0;
 			bot.setPos(SandboxSettings.botSpawnPosition);
-			bot.setDir(new Vector2(0,1));
+			bot.setDir(SandboxSettings.botUpVector);
 			bot.resetVelocity();
 		}
 	}

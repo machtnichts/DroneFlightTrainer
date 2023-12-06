@@ -98,7 +98,7 @@ public class Vector2 {
 	public final static float kEpsilonNormalSqrt = 1e-15f;
 	public static double Angle(Vector2 from, Vector2 to)
     {
-        // sqrt(a) * sqrt(b) = sqrt(a * b) -- valid for real numbers
+
         float denominator = (float)Math.sqrt(from.sqrtmagnitude() * to.sqrtmagnitude());
         if (denominator < kEpsilonNormalSqrt)
             return 0F;
@@ -114,6 +114,9 @@ public class Vector2 {
     {
         double unsigned_angle = Angle(from, to);
         double sign = Math.signum(from.x * to.y - from.y * to.x);
+        if (sign == 0) {
+        	 return unsigned_angle;
+        }
         return unsigned_angle * sign;
     }
 	

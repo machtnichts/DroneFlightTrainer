@@ -231,6 +231,9 @@ public class Bot implements Comparable<Bot> {
 	public double getMomentum() {
 		return momentum;
 	}
+	public void setWeight(float weight) {
+		this.weight = weight;
+	}
 	
 	 public static Color shiftColor(Color originalColor, int maxShiftAmount) {
 	        Random rand = new Random();

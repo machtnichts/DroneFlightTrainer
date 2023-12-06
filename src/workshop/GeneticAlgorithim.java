@@ -25,6 +25,9 @@ public class GeneticAlgorithim {
 	 * Gets called for every Bot in every frame of the simulation
 	 */
 	public void evaluateBot(Bot b) {
+	
+
+			b.score -= Math.abs(b.getAngle())/300F;
 		b.score -= (b.getPos().distance(SandboxSettings.botGoalPosition))/1000F;
 	}
 	
@@ -108,10 +111,10 @@ public class GeneticAlgorithim {
 		population = (ArrayList<Bot>) nextPopulation;
 	}
 	public void mutateBot(Bot bot) {
-		Random random = new Random();
+
 		for (int i = 0; i < bot.neuralNet.weights.length;i++) {
 			if (random.nextDouble() < bot.mutationChance) {
-				bot.neuralNet.weights[i] += ((random.nextDouble()*2)-1D)* bot.mutationPower;
+				bot.neuralNet.weights[i] += ((random.nextGaussian()*2)-1D)* bot.mutationPower;
 			}
 		}
 	}
