@@ -93,8 +93,11 @@ public class Main {
 					}
 					
 				}
+				if (SandboxSettings.targetSetting == TargetSetting.MOVE_CIRCULAR) {
+					SandboxSettings.botGoalPosition = Vector2.turnDeg(SandboxSettings.botGoalPosition, 0.5F);
+				}
 				
-				if (currentTick > 500) {
+				if (currentTick > 500+ gen*2) {
 					calculateLastScore();
 			
 					currentTick = 0;
