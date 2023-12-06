@@ -12,10 +12,10 @@ public class SandboxSettings {
 	public static Vector2 botSpawnPosition = new Vector2(0,0);
 	public static Vector2 botGoalPosition = new Vector2(0,400);
 	public static TargetSetting targetSetting = TargetSetting.STATIC_TARGET;
-	public static ScoreSetting scoreSetting = ScoreSetting.AVERAGED_SCORE;
+	public static ScoreSetting scoreSetting = ScoreSetting.EXPONATIALY_WEIGHTED_SCORE;
 	public static int simulationSteps = 1000;
 	public static float additionalSimulationStepsPerGeneration = 0.002F;
-	
+	public static int hiddenLayerSize = 6;
 	public static Bot createBot() {
 
 
@@ -23,16 +23,16 @@ public class SandboxSettings {
 		
 		bot.setWeight(1);
 		// Basic drone with two thrusters
-		
+		/*
 		bot.addTruster(new Thruster(new Vector2(0, -70), new Vector2(0, -1), 900, 50));
 		bot.addTruster(new Thruster(new Vector2(20, -150), new Vector2(1, 0), 85, 5));
 		bot.addTruster(new Thruster(new Vector2(-20,-150), new Vector2(-1, 0), 85, 5));
-		
+		*/
 	
-		/*
+	
 	bot.addTruster(new Thruster(new Vector2(60, 0), new Vector2(0, -1), 150, 5));
 		bot.addTruster(new Thruster(new Vector2(-60, 0), new Vector2(0, -1), 150, 5));
-		*/
+	
 	
 		/*
 		  //Cofiguration for spinning drone

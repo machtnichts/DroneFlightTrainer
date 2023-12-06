@@ -181,7 +181,7 @@ public class Bot implements Comparable<Bot> {
 		//new NeuralNetworkOld(new int[] {6,10,10,10,getThrusterCount()}
 		//neuralNet = new NeuralNetwork(6, 1, 6,getThrusterCount());
 
-		neuralNet = new NeuralNetworkSimple(6,getThrusterCount());
+		neuralNet = new NeuralNetworkSimple(6,SandboxSettings.hiddenLayerSize,getThrusterCount());
 	}
 	
 	

@@ -111,14 +111,14 @@ public class Main {
 					}
 					
 				
-					if (SandboxSettings.scoreSetting == ScoreSetting.AVERAGED_SCORE) {
-						plotScores.add(lastBest.lastScore);
-						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
+					if (SandboxSettings.scoreSetting == ScoreSetting.BASIC_SCORE) {
+						plotScores.add(lastBest.score);
+						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.score + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
 						
 					}
 					else {
-						plotScores.add(lastBest.score);
-						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.score + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
+						plotScores.add(lastBest.lastScore);
+						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
 					}
 					
 					gen++;
@@ -144,7 +144,19 @@ public class Main {
 	
 	public static void calculateLastScore() {
 		for (Bot bot : geneticAlgorithim.population) {
-			bot.lastScore = (bot.lastScore * bot.iterations + bot.score)/ (double)(bot.iterations+1D);
+			if (SandboxSettings.scoreSetting == ScoreSetting.EXPONATIALY_WEIGHTED_SCORE) {
+				if (bot.lastScore == 0) {
+					bot.lastScore = bot.score;
+				}
+				else {
+					bot.lastScore = bot.lastScore * 0.9F + bot.score*0.1F;
+				}
+				
+			}
+			else {
+				bot.lastScore = (bot.lastScore * bot.iterations + bot.score)/ (double)(bot.iterations+1D);
+			}
+			
 		}
 	}
 	public static void resetBots() {
