@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import neural.NeuralNetworkSimple;
 import utils.Vector2;
+import workshop.SandboxSettings;
 
 public class Bot implements Comparable<Bot> {
 	
@@ -253,14 +254,24 @@ public class Bot implements Comparable<Bot> {
 	
 	@Override
 	public int compareTo(Bot other) {
-		if (other.lastScore > lastScore) {
-			return 1;
+		if (SandboxSettings.scoreSetting == ScoreSetting.AVERAGED_SCORE) {
+			if (other.lastScore > lastScore) {
+				return 1;
+			}
+			if (other.lastScore < lastScore) {
+				return -1;
+			}
+			return 0;
 		}
-		if (other.lastScore < lastScore) {
-			return -1;
+		else {
+			if (other.score > score) {
+				return 1;
+			}
+			if (other.score < score) {
+				return -1;
+			}
+			return 0;
 		}
-		return 0;
-		
 	}
 	
 	public static Color shiftHue(Color originalColor, float hueShift) {

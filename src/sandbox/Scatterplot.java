@@ -13,10 +13,12 @@ public class Scatterplot {
 	 private static final int WIDTH = 500;
 	 private static final int HEIGHT = 400;
 	 private static final int MARGIN = 50;
+	 Color color;
 	 
 	 double[] xData;
 	 double[] yData;
 	 public Scatterplot(double[] data) {
+		 color =  Color.getHSBColor((float) Math.random(), 0.9F, 0.7F);
 		yData = data;
 		xData = new double[data.length];
 		for (int i = 0;i< xData.length;i++) {
@@ -43,7 +45,7 @@ public class Scatterplot {
 	    private void createAndShowGUI() {
 	        JFrame frame = new JFrame("Score over Generations");
 	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	        frame.setSize(WIDTH, HEIGHT);
+	        frame.setSize(WIDTH, HEIGHT+30);
 
 	         panel = new JPanel() {
 	            @Override
@@ -63,20 +65,27 @@ public class Scatterplot {
 	    }
 	    
 	private void drawScatterPlot(Graphics g) {
+	
         int xAxisLength = WIDTH - 2 * MARGIN;
         int yAxisLength = HEIGHT - 2 * MARGIN;
 
         // Draw axes
-        g.drawLine(MARGIN, HEIGHT - MARGIN, MARGIN + xAxisLength, HEIGHT - MARGIN);
+     
+        //g.drawLine(MARGIN, HEIGHT - MARGIN, MARGIN + xAxisLength, HEIGHT - MARGIN);
         g.drawLine(MARGIN, HEIGHT - MARGIN, MARGIN, HEIGHT - MARGIN - yAxisLength);
-
+        
+    	if (xData == null || yData == null || xData.length <= 0 || yData.length <= 0)
+			return;
+    	
+        g.drawString(""+getMin(yData), 60, HEIGHT - 40);
+        g.drawString(""+getMax(yData), 60, 50);
         // Draw data points
         for (int i = 0; i < xData.length; i++) {
             int x = MARGIN + (int) ((xData[i] - getMin(xData)) / (getMax(xData) - getMin(xData)) * xAxisLength);
             int y = HEIGHT - MARGIN - (int) ((yData[i] - getMin(yData)) / (getMax(yData) - getMin(yData)) * yAxisLength);
 
-            g.setColor(Color.BLUE);
-            g.fillOval(x - 2, y - 2, 4, 4);
+            g.setColor(color);
+            g.fillOval(x - 3, y -3, 6, 6);
         }
     }
 

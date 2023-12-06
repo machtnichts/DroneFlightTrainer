@@ -1,6 +1,7 @@
 package workshop;
 
 import sandbox.Bot;
+import sandbox.ScoreSetting;
 import sandbox.TargetSetting;
 import sandbox.Thruster;
 import utils.Vector2;
@@ -9,9 +10,9 @@ public class SandboxSettings {
 
 
 	public static Vector2 botSpawnPosition = new Vector2(0,0);
-	public static Vector2 botGoalPosition = new Vector2(0,0);
-	public static TargetSetting target = TargetSetting.STATIC_TARGET;
-	
+	public static Vector2 botGoalPosition = new Vector2(0,-400);
+	public static TargetSetting targetSetting = TargetSetting.CHANGE_TARGET_DURING_RUN;
+	public static ScoreSetting scoreSetting = ScoreSetting.BASIC_SCORE;
 	
 	public static Bot createBot() {
 

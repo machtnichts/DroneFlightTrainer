@@ -14,8 +14,7 @@ public class GeneticAlgorithim {
 	public ArrayList<Bot> population = new ArrayList<Bot>();
 	
 	public final int populationSize = 100;
-	public final int survivorCount = 30;
-	public final int randomCount = 10;
+	Random random = new Random();
 	
 	public void initPopulation() {
 		for (int i = 0;i< populationSize; i++) {
@@ -32,7 +31,7 @@ public class GeneticAlgorithim {
 	
 	public void calculateNextPopulation(int genNumber) {
 		Collections.sort(population);
-		Random random = new Random();
+		
 		// genNumber is the which generation this algorithim is at, if you want you can use this to alter the mutation values
 		
 		// Delete the worst ones
@@ -43,12 +42,29 @@ public class GeneticAlgorithim {
 		List<Bot> nextPopulation = new ArrayList<Bot>();
 
 	
-		for (int i = 0;i<survivorCount;i++) {
-			nextPopulation.add(population.get(i));
+		for (int i = 0;i<populationSize;i++) {
+			float survivalChance = (1F- ((float)i/(float)populationSize))/2F;
+			
+			if (random.nextFloat() < survivalChance) {
+				nextPopulation.add(population.get((int) i));
+			}
 		}
-	
-
-
+		int survivorCount = nextPopulation.size();
+		
+		for (int i = 0;i<populationSize-survivorCount;i++) {
+			Bot newBot = nextPopulation.get(i%nextPopulation.size()).clone();
+			//newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
+			double r = random.nextDouble();
+			mutateBot(newBot);
+			if (r > 0.8) {
+				newBot.mutateMutation(random);
+			}
+			
+			
+			//net.softMutate(sigma);
+			nextPopulation.add(newBot);
+		}
+		/*
 		for (int i = 0;i<populationSize-survivorCount-randomCount;i++) {
 			Bot newBot = nextPopulation.get(i%survivorCount).clone();
 			
@@ -72,10 +88,8 @@ public class GeneticAlgorithim {
 			nextPopulation.add(SandboxSettings.createBot());
 		}
 		population = (ArrayList<Bot>) nextPopulation;
-		for (Bot b : population) {
-			b.score = 0;
-		}
-		
+	*/
+		population = (ArrayList<Bot>) nextPopulation;
 	}
 
 		

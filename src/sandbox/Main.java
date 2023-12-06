@@ -74,12 +74,12 @@ public class Main {
 					Physics.calcPhysics(bot, 0.1D);
 				
 				}
-				if (SandboxSettings.target ==  TargetSetting.CHANGE_TARGET_DURING_RUN) {
+				if (SandboxSettings.targetSetting ==  TargetSetting.CHANGE_TARGET_DURING_RUN) {
 					if (currentTick % 300 == 0) {
 						SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 700,(random.nextDouble()*2-1) * 700);
 					}
 				}
-				if (SandboxSettings.target ==  TargetSetting.CANT_CATCH_ME) {
+				if (SandboxSettings.targetSetting ==  TargetSetting.CANT_CATCH_ME) {
 					if (currentTick % 300 == 0) {
 						targetVel = new Vector2(0,0);
 						SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 700,(random.nextDouble()*2-1) * 700);
@@ -94,23 +94,36 @@ public class Main {
 					
 				}
 				
-				if (currentTick > 500+ genNumber*2) {
+				if (currentTick > 500) {
+					calculateLastScore();
+			
+					currentTick = 0;
+					genNumber += 1;
+					Collections.sort(geneticAlgorithim.population);
+					lastBest = geneticAlgorithim.population.get(0);
 					geneticAlgorithim.calculateNextPopulation(gen);
 					
 					if (plot != null) {
 						plot.setData(plotScores);
 						plot.update();
 					}
-					currentTick = 0;
-					genNumber += 1;
-					resetBots();
-					geneticAlgorithim.calculateNextPopulation(gen);
 					
-					plotScores.add(lastBest.lastScore);
-					textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
+				
+					if (SandboxSettings.scoreSetting == ScoreSetting.AVERAGED_SCORE) {
+						plotScores.add(lastBest.lastScore);
+						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
+						
+					}
+					else {
+						plotScores.add(lastBest.score);
+						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.score + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
+						
+					}
+					
 					gen++;
+					resetBots();
 					
-					if (SandboxSettings.target ==  TargetSetting.CHANGE_TARGET_EACH_RUN)
+					if (SandboxSettings.targetSetting ==  TargetSetting.CHANGE_TARGET_EACH_RUN)
 					SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
 				}
 				
@@ -126,10 +139,14 @@ public class Main {
 	static Bot lastBest;
 	static double lastScore;
 	
-	public static void resetBots() {
-		lastBest = geneticAlgorithim.population.get(0);
+	public static void calculateLastScore() {
 		for (Bot bot : geneticAlgorithim.population) {
 			bot.lastScore = (bot.lastScore * bot.iterations + bot.score)/ (double)(bot.iterations+1D);
+		}
+	}
+	public static void resetBots() {
+	
+		for (Bot bot : geneticAlgorithim.population) {
 			bot.iterations += 1;
 			bot.score = 0;
 			bot.setPos(SandboxSettings.botSpawnPosition);
