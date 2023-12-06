@@ -27,7 +27,7 @@ public class Main {
 	
 	public static SimulationScreen screen;
 
-	public static Vector2 start = new Vector2(0,-200);
+
 	public static GeneticAlgorithim geneticAlgorithim = new GeneticAlgorithim();
 	static int gen = 0;
 	public static ArrayList<Double> plotScores = new ArrayList<Double>(); 
@@ -95,6 +95,7 @@ public class Main {
 				}
 				
 				if (currentTick > 500+ genNumber*2) {
+					geneticAlgorithim.calculateNextPopulation(gen);
 					
 					if (plot != null) {
 						plot.setData(plotScores);
@@ -104,6 +105,7 @@ public class Main {
 					genNumber += 1;
 					resetBots();
 					geneticAlgorithim.calculateNextPopulation(gen);
+					
 					plotScores.add(lastBest.lastScore);
 					textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
 					gen++;
@@ -130,7 +132,7 @@ public class Main {
 			bot.lastScore = (bot.lastScore * bot.iterations + bot.score)/ (double)(bot.iterations+1D);
 			bot.iterations += 1;
 			bot.score = 0;
-			bot.setPos(start);
+			bot.setPos(SandboxSettings.botSpawnPosition);
 			bot.setDir(new Vector2(0,1));
 			bot.resetVelocity();
 		}
