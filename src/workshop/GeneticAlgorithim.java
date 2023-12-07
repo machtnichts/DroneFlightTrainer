@@ -27,7 +27,7 @@ public class GeneticAlgorithim {
 	public void evaluateBot(Bot b) {
 	
 
-	 b.score -= Math.abs(b.getAngle())*Math.abs(b.getAngle())/30F;
+	// b.score -= Math.abs(b.getAngle())*Math.abs(b.getAngle())/30F;
 		b.score -= (b.getPos().distance(SandboxSettings.botGoalPosition))/1000F;
 	}
 	
