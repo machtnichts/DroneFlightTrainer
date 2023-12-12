@@ -40,8 +40,8 @@ public class SimulationScreen extends Canvas implements KeyListener{
 		
 	
 			int disp = 100;
-		for (Bot bot : Main.geneticAlgorithim.population) {
-		
+		for (Bot botL : Main.geneticAlgorithim.population) {
+			SimulationBot bot = (SimulationBot) botL;
 			disp -= 1;
 			if (disp <= 0) 
 				break;
@@ -49,7 +49,7 @@ public class SimulationScreen extends Canvas implements KeyListener{
 			drawBot(bot,bot.getColor(),g2d);
 			
 		}
-		drawBot(Main.geneticAlgorithim.population.get(0),Color.white,g2d);
+		drawBot((SimulationBot) Main.geneticAlgorithim.population.get(0),Color.white,g2d);
 	
 		
 		g.drawImage(bi, 0, 0, null);
@@ -57,7 +57,7 @@ public class SimulationScreen extends Canvas implements KeyListener{
 	}
 	
 	
-	private void drawBot(Bot bot,Color c,Graphics2D g2d) {
+	private void drawBot(SimulationBot bot,Color c,Graphics2D g2d) {
 		g2d.setColor(c);
 		drawOval(g2d, bot.getPosition().mult(disp_scale), RAD* disp_scale);
 		g2d.setColor(Color.GREEN);

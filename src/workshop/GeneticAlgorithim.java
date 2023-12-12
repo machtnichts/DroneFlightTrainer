@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import sandbox.Bot;
+import sandbox.SimulationBot;
 import utils.Vector2;
 
 public class GeneticAlgorithim {
@@ -18,7 +19,13 @@ public class GeneticAlgorithim {
 	
 	public void initPopulation() {
 		for (int i = 0;i< populationSize; i++) {
-			population.add(SandboxSettings.createBot());
+			Bot bot = SandboxSettings.createBot();
+			double[] weights = bot.getNeuralWeights();
+			for (int w = 0; w < weights.length; w++) {
+				weights[w] = ((random.nextDouble()* 2 )-1D);
+			}
+			population.add(bot);
+			
 		}
 	}
 	
@@ -27,10 +34,10 @@ public class GeneticAlgorithim {
 	/*
 	 * Gets called for every Bot in every frame of the simulation
 	 */
-	public void evaluateBot(Bot b) {
+	public void evaluateBot(SimulationBot b) {
 		// SandboxSettings.botGoalPosition is the position the Bot needs to go to
 		// 
-
+		//b.addScore(-Math.abs(b.getAngle()/1000F));
 		b.setScore(b.getScore() -(b.getPosition().distance(SandboxSettings.botGoalPosition))/1000F);
 	}
 	
@@ -57,7 +64,7 @@ public class GeneticAlgorithim {
 		
 		
 	public void calcNextStochastic() {
-		List<Bot> nextPopulation = new ArrayList<Bot>();
+		ArrayList<Bot> nextPopulation = new ArrayList<Bot>();
 
 		
 		for (int i = 0;i<populationSize;i++) {
@@ -73,19 +80,19 @@ public class GeneticAlgorithim {
 			Bot newBot = nextPopulation.get(i%nextPopulation.size()).clone();
 			//newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
 			double r = random.nextDouble();
-			mutateBot(newBot);
+			mutateBot((SimulationBot) newBot);
 			if (r > 0.8) {
-				newBot.mutateMutation(random);
+				mutateMutation(newBot);
 			}
 			
 			
 			//net.softMutate(sigma);
 			nextPopulation.add(newBot);
 		}
-		population = (ArrayList<Bot>) nextPopulation;
+		population = nextPopulation;
 	}
 	public void calcNextBasic() {
-		List<Bot> nextPopulation = new ArrayList<Bot>();
+		ArrayList<Bot> nextPopulation = new ArrayList<Bot>();
 		int survivorCount = populationSize/3;
 		int randomCount = populationSize/8;
 		for (int i = 0;i<survivorCount;i++) {
@@ -97,8 +104,8 @@ public class GeneticAlgorithim {
 			//newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
 			double r = random.nextDouble();
 			mutateBot(newBot);
-			if (r > 0.8) {
-				newBot.mutateMutation(random);
+			if (r > newBot.getMutationChance()/4F) {
+				mutateMutation(newBot);
 			}
 			
 			
@@ -113,19 +120,28 @@ public class GeneticAlgorithim {
 		for (int i = 0;i<randomCount;i++) {
 			nextPopulation.add(SandboxSettings.createBot());
 		}
-		population = (ArrayList<Bot>) nextPopulation;
+		population = nextPopulation;
 	}
+	
+	public void mutateMutation(Bot b) {
+		b.setMutationChance(b.getMutationChance() + (random.nextDouble()*2-1)/10D);
+		b.setMutationChance(Math.max(0.001, b.getMutationChance()));
+		b.setMutationPower(b.getMutationPower()  + (random.nextDouble()*2-1)*b.getMutationPower()* 0.01F);
+		//b.setMutationPower(b.getMutationPower() - 0.01D);
+	}
+	
 	public void mutateBot(Bot bot) {
-
-		for (int i = 0; i < bot.neuralNet.weights.length;i++) {
-			if (random.nextDouble() < bot.mutationChance) {
-				bot.neuralNet.weights[i] += ((random.nextGaussian()*2)-1D)* bot.mutationPower;
-			}
+		double weights[] = bot.getNeuralWeights();
+		
+		for (int i = 0; i < weights.length;i++) {
+			if (random.nextDouble() < bot.getMutationChance()) {
+				weights[i] += ((random.nextGaussian()*2)-1D)*2* bot.getMutationPower();
+			}	
 		}
 	}
 	
 	
-	public void mutateBotEmpty(Bot bot) {
+	public void mutateBotEmpty(SimulationBot bot) {
 		// mutationChance: chance for an mutation to occur for each neuron
 		// mutationPower: strength of a mutation if it occurs
 		
@@ -135,6 +151,7 @@ public class GeneticAlgorithim {
 		// Well then, change some weights around
 		// If you don't want to you don't have to use the mutationChance and mutationPower
 	}
+	
 	
 	
 

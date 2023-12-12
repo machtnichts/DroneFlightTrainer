@@ -52,9 +52,9 @@ public class Main {
 				int fast = shiftSlider.getValue();
 				for (int a = 0;a<fast;a++) {
 
-				for (Bot bot : geneticAlgorithim.population) {
-
-				
+				for (Bot botL : geneticAlgorithim.population) {
+					SimulationBot bot = (SimulationBot) botL;
+					
 					double angle = (Vector2.SignedAngle(bot.getDir(), new Vector2(0, 1))) / 180;
 					double xToTarget = (bot.getPosition().getX() - SandboxSettings.botGoalPosition.getX())/500D;
 					double yToTarget = (bot.getPosition().getY() - SandboxSettings.botGoalPosition.getY())/500D;
@@ -103,8 +103,8 @@ public class Main {
 			
 					currentTick = 0;
 					genNumber += 1;
-					Collections.sort(geneticAlgorithim.population);
-					lastBest = geneticAlgorithim.population.get(0);
+					sortPopulation();
+					lastBest = (SimulationBot) geneticAlgorithim.population.get(0);
 					geneticAlgorithim.calculateNextPopulation(gen);
 					
 					if (plot != null) {
@@ -134,18 +134,35 @@ public class Main {
 				
 				currentTick++;
 				}
-				if (fast < 100)
+				if (fast < shiftSlider.getMaximum()-1)
 				screen.paint(screen.getGraphics());
 			}
 		};
 	
 	}
+	
+	
+	public static void sortPopulation() {
+		List<SimulationBot> bots = new ArrayList<SimulationBot>();
+		
+		for (Bot b : geneticAlgorithim.population) {
+			bots.add((SimulationBot) b);
+		}
+		
+		Collections.sort(bots);
+		geneticAlgorithim.population.clear();
+		for (Bot b : bots) {
+			geneticAlgorithim.population.add(b);
+		}
+	
+	}
 
-	static Bot lastBest;
+	static SimulationBot lastBest;
 	static double lastScore;
 	
 	public static void calculateLastScore() {
-		for (Bot bot : geneticAlgorithim.population) {
+		for (Bot botL : geneticAlgorithim.population) {
+			SimulationBot bot = (SimulationBot) botL;
 			if (SandboxSettings.scoreSetting == ScoreSetting.EXPONATIALY_WEIGHTED_SCORE) {
 				if (bot.getLastScore() == 0) {
 					bot.setLastScore(bot.getScore());
@@ -164,7 +181,8 @@ public class Main {
 	}
 	public static void resetBots() {
 	
-		for (Bot bot : geneticAlgorithim.population) {
+		for (Bot botL : geneticAlgorithim.population) {
+			SimulationBot bot = (SimulationBot) botL;
 			bot.setIterations(bot.getIterations() +1);
 			bot.setScore(0);
 			bot.setPosition(SandboxSettings.botSpawnPosition);
@@ -182,7 +200,7 @@ public class Main {
 
 	        JPanel panel = new JPanel(new BorderLayout());
 	        
-	        shiftSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 1);
+	        shiftSlider = new JSlider(JSlider.HORIZONTAL, 1, 150, 1);
 	        shiftSlider.setMajorTickSpacing(0);
 	        shiftSlider.setMinorTickSpacing(0);
 	        shiftSlider.setPaintTicks(true);

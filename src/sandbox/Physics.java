@@ -12,19 +12,19 @@ public class Physics {
 
 	public static double gravity = -9.81D;
 
-	public static void calcPhysics(Bot bot,double deltaTime) {
+	public static void calcPhysics(SimulationBot bot,double deltaTime) {
 	    calcGravity(bot,deltaTime);
 		calcTrust(bot,deltaTime);
 		bot.move(deltaTime);
 	}
 	
 	
-	public static void calcGravity(Bot bot,double deltaTime) {
+	public static void calcGravity(SimulationBot bot,double deltaTime) {
 		bot.addVelocity(new Vector2(0,gravity).mult(deltaTime));
 	}
 	
 	
-	public static void calcTrust(Bot bot,double deltaTime) {
+	public static void calcTrust(SimulationBot bot,double deltaTime) {
 		
 		double totalAngle = 0;
 		Vector2 center = bot.getAbsoluteCenterOfMass();

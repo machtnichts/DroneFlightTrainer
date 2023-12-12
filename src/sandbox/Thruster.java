@@ -4,7 +4,7 @@ import utils.Vector2;
 
 public class Thruster {
 	
-	Bot bot;
+	SimulationBot bot;
 	Vector2 pos;
 	Vector2 dir;
 	double maxTrust;
@@ -28,7 +28,7 @@ public class Thruster {
 	}
 	
 	
-	public void setBot(Bot bot) {
+	public void setBot(SimulationBot bot) {
 		this.bot = bot;
 	}
 	
