@@ -22,7 +22,7 @@ public class GeneticAlgorithim {
 			Bot bot = SandboxSettings.createBot();
 			double[] weights = bot.getNeuralWeights();
 			for (int w = 0; w < weights.length; w++) {
-				weights[w] = ((random.nextDouble()* 2 )-1D);
+				//weights[w] = ((random.nextGaussian()* 2 )-1D);
 			}
 			population.add(bot);
 			
@@ -93,7 +93,7 @@ public class GeneticAlgorithim {
 	}
 	public void calcNextBasic() {
 		ArrayList<Bot> nextPopulation = new ArrayList<Bot>();
-		int survivorCount = populationSize/2;
+		int survivorCount = populationSize/3;
 		int randomCount = populationSize/8;
 		for (int i = 0;i<survivorCount;i++) {
 			nextPopulation.add(population.get(i));
@@ -102,7 +102,7 @@ public class GeneticAlgorithim {
 			Bot newBot = nextPopulation.get(i%survivorCount).clone();
 			
 			//newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
-			double r = random.nextGaussian();
+			double r = random.nextDouble();
 			mutateBot(newBot);
 			if (r > 0.8) {
 				mutateMutation(newBot);
@@ -120,14 +120,22 @@ public class GeneticAlgorithim {
 		for (int i = 0;i<randomCount;i++) {
 			nextPopulation.add(SandboxSettings.createBot());
 		}
+		System.out.println(nextPopulation.size());
 		population = nextPopulation;
 	}
 	
 	public void mutateMutation(Bot b) {
+		
 		b.setMutationChance(b.getMutationChance() + (random.nextDouble()*2-1)/10D);
+		b.setMutationChance(Math.max(0.001, b.getMutationChance()));
+		b.setMutationPower(b.getMutationPower() + (random.nextDouble()*2-1)/10D);
+		/*
+		b.setMutationChance(b.getMutationChance() + (random.nextGaussian()*2-1)/10D);
 		b.setMutationChance(Math.max(0.001, b.getMutationChance()));
 		//b.setMutationPower(clamp(b.getMutationPower()  + (random.nextDouble()*2-0.1F),0.01F,2F));
 		//b.setMutationPower(b.getMutationPower() - 0.01D);
+		 * */
+	
 	}
 	
 	
@@ -139,7 +147,7 @@ public class GeneticAlgorithim {
 		
 		for (int i = 0; i < weights.length;i++) {
 			if (random.nextDouble() < bot.getMutationChance()) {
-				weights[i] += ((random.nextDouble()*2D)-1D)*2D* bot.getMutationPower();
+				weights[i] += ((random.nextGaussian()*2D)-1D)*2D* bot.getMutationPower();
 			}	
 		}
 	}

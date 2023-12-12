@@ -31,12 +31,10 @@ public class NeuralNetworkSimple implements Cloneable{
 		}
 		
 		for (int i = 0;i < hiddenOutput.length;i++) {
-			hiddenOutput[i] = sigmoid(hiddenOutput[i]);
-			/*
+			//hiddenOutput[i] = sigmoid(hiddenOutput[i]);
 			if (hiddenOutput[i]<0) {
 				hiddenOutput[i] = hiddenOutput[i]/2F;
 			}
-			*/
 		}
 		
 		double[] output = new double[hiddenLayerSize];

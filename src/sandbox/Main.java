@@ -174,7 +174,7 @@ public class Main {
 				
 			}
 			else {
-				bot.setLastScore((bot.getLastScore() * bot.getIterations() + bot.getScore())/((double) (bot.getIterations() +1D)));
+				bot.setLastScore((bot.getLastScore() * bot.getIterations() + bot.getScore())/((double) ((double)bot.getIterations() +1D)));
 			
 			}
 			

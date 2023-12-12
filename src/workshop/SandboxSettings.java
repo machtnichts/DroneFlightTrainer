@@ -11,11 +11,11 @@ public class SandboxSettings {
 
 	// Settings for Simulation. Have fun!
 	public static Vector2 botUpVector = new Vector2(0,1);
-	public static Vector2 botSpawnPosition = new Vector2(0,400);
-	public static Vector2 botGoalPosition = new Vector2(0,-400);
-	public static TargetSetting targetSetting = TargetSetting.STATIC_TARGET;
+	public static Vector2 botSpawnPosition = new Vector2(0,0);
+	public static Vector2 botGoalPosition = new Vector2(0,400);
+	public static TargetSetting targetSetting = TargetSetting.CANT_CATCH_ME;
 	public static ScoreSetting scoreSetting = ScoreSetting.AVERAGED_SCORE;
-	public static int simulationSteps = 1000;
+	public static int simulationSteps = 500;
 	public static float additionalSimulationStepsPerGeneration = 0.002F;
 	public static int hiddenLayerSize = 2;
 	

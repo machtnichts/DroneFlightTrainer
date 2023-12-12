@@ -39,7 +39,7 @@ public class SimulationScreen extends Canvas implements KeyListener{
 		
 		
 	
-			int disp = 100;
+			int disp = 1000;
 		for (Bot botL : Main.geneticAlgorithim.population) {
 			SimulationBot bot = (SimulationBot) botL;
 			disp -= 1;
