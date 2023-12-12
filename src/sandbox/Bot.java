@@ -9,18 +9,18 @@ import workshop.SandboxSettings;
 
 public class Bot implements Comparable<Bot> {
 	
-	Vector2 pos;
-	Vector2 startPos;
-	Vector2 dir;
-	Vector2 velocity;
-	double momentum;
-	double weight;
-	double totalWeight;
-	double lastScore = 0;
-	public double score = 0;
-	public Color color = Color.getHSBColor((float) Math.random(), 1, 0.8F);
 
-	int iterations = 0;
+	private Color color = Color.getHSBColor((float) Math.random(), 1, 0.8F);
+	private Vector2 pos;
+	private Vector2 startPos;
+	private Vector2 dir;
+	private Vector2 velocity;
+	private double momentum;
+	private double weight;
+	private double totalWeight;
+	private double lastScore = 0;
+	private double score = 0;
+	private int iterations = 0;
 	
 	ArrayList<Thruster> trusters = new ArrayList<Thruster>();
 	public NeuralNetworkSimple neuralNet;
@@ -93,12 +93,12 @@ public class Bot implements Comparable<Bot> {
 		momentum = 0;
 	}
 	
-	public Vector2 getPos() {
+	public Vector2 getPosition() {
 		
 		return pos;
 	}
 
-	public void setPos(Vector2 pos) {
+	public void setPosition(Vector2 pos) {
 		//System.out.println(""+pos.toString());
 		this.pos = pos.clone();
 		
@@ -294,5 +294,89 @@ public class Bot implements Comparable<Bot> {
 
         return Color.getHSBColor(newHue, hsb[1], hsb[2]);
     }
+	public Vector2 getStartPos() {
+		return startPos;
+	}
 
+	public void setStartPos(Vector2 startPos) {
+		this.startPos = startPos;
+	}
+
+	public double getLastScore() {
+		return lastScore;
+	}
+
+	public void setLastScore(double lastScore) {
+		this.lastScore = lastScore;
+	}
+
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(double score) {
+		this.score = score;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	public int getIterations() {
+		return iterations;
+	}
+
+	public void setIterations(int iterations) {
+		this.iterations = iterations;
+	}
+
+	public ArrayList<Thruster> getTrusters() {
+		return trusters;
+	}
+
+	public void setTrusters(ArrayList<Thruster> trusters) {
+		this.trusters = trusters;
+	}
+
+	public NeuralNetworkSimple getNeuralNet() {
+		return neuralNet;
+	}
+
+	public void setNeuralNet(NeuralNetworkSimple neuralNet) {
+		this.neuralNet = neuralNet;
+	}
+
+	public double getMutationChance() {
+		return mutationChance;
+	}
+
+	public void setMutationChance(double mutationChance) {
+		this.mutationChance = mutationChance;
+	}
+
+	public double getMutationPower() {
+		return mutationPower;
+	}
+
+	public void setMutationPower(double mutationPower) {
+		this.mutationPower = mutationPower;
+	}
+
+	public void setVelocity(Vector2 velocity) {
+		this.velocity = velocity;
+	}
+
+	public void setMomentum(double momentum) {
+		this.momentum = momentum;
+	}
+
+	public void setTotalWeight(double totalWeight) {
+		this.totalWeight = totalWeight;
+	}
 }
+
+

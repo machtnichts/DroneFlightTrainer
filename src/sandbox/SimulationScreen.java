@@ -26,16 +26,16 @@ public class SimulationScreen extends Canvas implements KeyListener{
 	
 	public static int i = 0;
 
-	public static double  disp_scale = 0.5F;
+	public static double  disp_scale = 0.3F;
 	
 	
 	public void paint(Graphics g) {
 		
-	
+		disp_scale = (double)Main.zoomSlider.getValue() / 100D;
 		BufferedImage bi = new BufferedImage(1000, 1000, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g2d = (Graphics2D) bi.getGraphics();
 		g2d.setColor(Color.green);
-		drawOval(g2d, SandboxSettings.botGoalPosition.mult(disp_scale), 5);
+		drawOval(g2d, SandboxSettings.botGoalPosition.mult(disp_scale), 2);
 		
 		
 	
@@ -46,7 +46,7 @@ public class SimulationScreen extends Canvas implements KeyListener{
 			if (disp <= 0) 
 				break;
 		
-			drawBot(bot,bot.color,g2d);
+			drawBot(bot,bot.getColor(),g2d);
 			
 		}
 		drawBot(Main.geneticAlgorithim.population.get(0),Color.white,g2d);
@@ -59,15 +59,15 @@ public class SimulationScreen extends Canvas implements KeyListener{
 	
 	private void drawBot(Bot bot,Color c,Graphics2D g2d) {
 		g2d.setColor(c);
-		drawOval(g2d, bot.getPos().mult(disp_scale), RAD);
+		drawOval(g2d, bot.getPosition().mult(disp_scale), RAD* disp_scale);
 		g2d.setColor(Color.GREEN);
-		drawOval(g2d, bot.getAbsoluteCenter().mult(disp_scale), 4);
+		drawOval(g2d, bot.getAbsoluteCenter().mult(disp_scale), 4* disp_scale);
 		g2d.setColor(Color.PINK);
-		drawOval(g2d, bot.getAbsoluteCenterOfMass().mult(disp_scale), 4);
+		drawOval(g2d, bot.getAbsoluteCenterOfMass().mult(disp_scale), 4* disp_scale);
 		
 		g2d.setColor(c);
 		
-		drawLine(g2d,Vector2.add( bot.getPos().mult(disp_scale), (new Vector2(bot.getAngle())).getNormalized().mult(-RAD)),Vector2.add( bot.getPos(), (new Vector2(bot.getAngle())).getNormalized().mult(RAD)).mult(disp_scale) );
+		drawLine(g2d,Vector2.add( bot.getPosition(), (new Vector2(bot.getAngle())).getNormalized().mult(-RAD)).mult(disp_scale),Vector2.add( bot.getPosition(), (new Vector2(bot.getAngle())).getNormalized().mult(RAD)).mult(disp_scale) );
 		for (Thruster t : bot.getAllTrusters()) {
 			Vector2 pos = t.getAbsolutePos();
 			//Vector2 ruler = Vector2.turnDeg(new Vector2(0, SQR), Vector2.getAngle(new Vector2(0, 1),t.getDirection()));
@@ -81,7 +81,7 @@ public class SimulationScreen extends Canvas implements KeyListener{
 			drawLine(g2d,Vector2.add(pos ,Vector2.turnDeg(ruler, 30)).mult(disp_scale),Vector2.add(pos ,Vector2.turnDeg(ruler, 150)).mult(disp_scale));
 			Vector2 top = Vector2.add(pos, Vector2.add(Vector2.turnDeg(ruler, -150), Vector2.turnDeg(ruler, 150)).mult(0.5));
 			//Vector2 top = pos;
-			drawLine(g2d,Vector2.add(Vector2.add(bot.getPos().mult(-1),top).getNormalized().mult(RAD), bot.getPos()).mult(disp_scale), top.mult(disp_scale));
+			drawLine(g2d,Vector2.add(Vector2.add(bot.getPosition().mult(-1),top).getNormalized().mult(RAD), bot.getPosition()).mult(disp_scale), top.mult(disp_scale));
 			int uga = (int)(255*t.getCurrentTrust());
 			g2d.setColor(new Color(255,255-uga,0));
 			drawLine(g2d,pos.mult(disp_scale), Vector2.add(pos ,ruler.mult((t.getCurrentTrust()*t.getMaxTrust())/40)).mult(disp_scale));

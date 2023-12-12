@@ -2,12 +2,14 @@ package sandbox;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Label;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -54,8 +56,8 @@ public class Main {
 
 				
 					double angle = (Vector2.SignedAngle(bot.getDir(), new Vector2(0, 1))) / 180;
-					double xToTarget = (bot.getPos().getX() - SandboxSettings.botGoalPosition.getX())/500D;
-					double yToTarget = (bot.getPos().getY() - SandboxSettings.botGoalPosition.getY())/500D;
+					double xToTarget = (bot.getPosition().getX() - SandboxSettings.botGoalPosition.getX())/500D;
+					double yToTarget = (bot.getPosition().getY() - SandboxSettings.botGoalPosition.getY())/500D;
 				
 					double[] input = new double[] { angle, xToTarget, yToTarget, bot.getVelocity().getX(),
 							bot.getVelocity().getY(), bot.getMomentum()};
@@ -112,13 +114,13 @@ public class Main {
 					
 				
 					if (SandboxSettings.scoreSetting == ScoreSetting.BASIC_SCORE) {
-						plotScores.add(lastBest.score);
-						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.score + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
+						plotScores.add(lastBest.getScore());
+						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.getScore() + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
 						
 					}
 					else {
-						plotScores.add(lastBest.lastScore);
-						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.lastScore + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
+						plotScores.add(lastBest.getLastScore());
+						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.getLastScore() + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
 					}
 					
 					gen++;
@@ -145,16 +147,17 @@ public class Main {
 	public static void calculateLastScore() {
 		for (Bot bot : geneticAlgorithim.population) {
 			if (SandboxSettings.scoreSetting == ScoreSetting.EXPONATIALY_WEIGHTED_SCORE) {
-				if (bot.lastScore == 0) {
-					bot.lastScore = bot.score;
+				if (bot.getLastScore() == 0) {
+					bot.setLastScore(bot.getScore());
 				}
 				else {
-					bot.lastScore = bot.lastScore * 0.9F + bot.score*0.1F;
+					bot.setLastScore(bot.getLastScore() * 0.9F + bot.getScore()*0.1F);
 				}
 				
 			}
 			else {
-				bot.lastScore = (bot.lastScore * bot.iterations + bot.score)/ (double)(bot.iterations+1D);
+				bot.setLastScore((bot.getLastScore() * bot.getIterations() + bot.getScore())/((double) (bot.getIterations() +1D)));
+			
 			}
 			
 		}
@@ -162,15 +165,16 @@ public class Main {
 	public static void resetBots() {
 	
 		for (Bot bot : geneticAlgorithim.population) {
-			bot.iterations += 1;
-			bot.score = 0;
-			bot.setPos(SandboxSettings.botSpawnPosition);
+			bot.setIterations(bot.getIterations() +1);
+			bot.setScore(0);
+			bot.setPosition(SandboxSettings.botSpawnPosition);
 			bot.setDir(SandboxSettings.botUpVector);
 			bot.resetVelocity();
 		}
 	}
 	
 	static JSlider shiftSlider;
+	static JSlider zoomSlider;
 	static JLabel textLabel;
 	public static SimulationScreen initScreen() {
 		   SimulationScreen bs = new SimulationScreen();
@@ -179,8 +183,8 @@ public class Main {
 	        JPanel panel = new JPanel(new BorderLayout());
 	        
 	        shiftSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 1);
-	        shiftSlider.setMajorTickSpacing(5);
-	        shiftSlider.setMinorTickSpacing(1);
+	        shiftSlider.setMajorTickSpacing(0);
+	        shiftSlider.setMinorTickSpacing(0);
 	        shiftSlider.setPaintTicks(true);
 	        shiftSlider.setPaintLabels(true);
 	    
@@ -188,23 +192,39 @@ public class Main {
 	        textLabel.setFont(textLabel.getFont().deriveFont(16.0f)); 
 	        panel.add(textLabel, BorderLayout.NORTH);
 
-	        panel.add(shiftSlider, BorderLayout.SOUTH);
+	   
 
 	  
 	        panel.add(bs, BorderLayout.CENTER);
+	        
+	        
+	        zoomSlider = new JSlider(JSlider.HORIZONTAL, 1, 80, 45);
+	        zoomSlider.setMajorTickSpacing(0);
+	        zoomSlider.setMinorTickSpacing(0);
+	        zoomSlider.setPaintTicks(true);
+	        zoomSlider.setPaintLabels(true);
+	        //zoomSlider.addChangeListener(bs);
+	        
 	        JButton button = new JButton("Plot score");
 	        button.addActionListener(e -> generatePlot());
 
 	        // Use FlowLayout for the panel containing the button
-	        JPanel buttonPanel = new JPanel(new FlowLayout());
+	        JPanel buttonPanel = new JPanel();
+	        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+	        
 	        buttonPanel.add(button);
-
+	        buttonPanel.add(new JLabel(" "));
+	        buttonPanel.add(new JLabel("Zoom"));
+	        buttonPanel.add(zoomSlider);
+	        buttonPanel.add(new JLabel(" "));
+	        buttonPanel.add(new JLabel("Simulation Speed"));
+	        buttonPanel.add(shiftSlider);
 	        panel.add(buttonPanel, BorderLayout.WEST);
 
 	        panel.add(bs, BorderLayout.CENTER);
 	        
 	        f.add(panel);
-	        f.setSize(1000, 1000);
+	        f.setSize(1000, 800);
 	        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        f.setResizable(true);
 	        f.setVisible(true);

@@ -38,7 +38,7 @@ public class Thruster {
 	}
 
 	public Vector2 getAbsolutePos() {
-		Vector2 botPos = bot.getPos();
+		Vector2 botPos = bot.getPosition();
 		
 		return botPos.add(Vector2.turnDeg(pos, Vector2.getAngle(bot.getDir(), new Vector2(0,1))));
 	}

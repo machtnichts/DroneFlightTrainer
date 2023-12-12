@@ -21,22 +21,27 @@ public class GeneticAlgorithim {
 			population.add(SandboxSettings.createBot());
 		}
 	}
+	
+	
+	
 	/*
 	 * Gets called for every Bot in every frame of the simulation
 	 */
 	public void evaluateBot(Bot b) {
-	
+		// SandboxSettings.botGoalPosition is the position the Bot needs to go to
+		// 
 
-	// b.score -= Math.abs(b.getAngle())*Math.abs(b.getAngle())/30F;
-		b.score -= (b.getPos().distance(SandboxSettings.botGoalPosition))/1000F;
+		b.setScore(b.getScore() -(b.getPosition().distance(SandboxSettings.botGoalPosition))/1000F);
 	}
 	
 	
 	public void calculateNextPopulation(int genNumber) {
-		Collections.sort(population);
 		
-		// genNumber is the which generation this algorithim is at, if you want you can use this to alter the mutation values
-		
+		/*
+		 * genNumber tells you which generation this algorithm is at, if you want you can use this to alter the chance and power of 
+		 * mutations, so they start of strong but get weaker with time
+		 */
+	
 		// Delete the worst ones
 		
 		
