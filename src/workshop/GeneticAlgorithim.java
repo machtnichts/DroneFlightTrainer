@@ -38,7 +38,7 @@ public class GeneticAlgorithim {
 		// SandboxSettings.botGoalPosition is the position the Bot needs to go to
 		// 
 		//b.addScore(-Math.abs(b.getAngle()/1000F));
-		b.setScore(b.getScore() -(b.getPosition().distance(SandboxSettings.botGoalPosition))/1000F);
+		b.addScore( -(b.getPosition().distance(SandboxSettings.botGoalPosition))/1000F);
 	}
 	
 	
@@ -93,7 +93,7 @@ public class GeneticAlgorithim {
 	}
 	public void calcNextBasic() {
 		ArrayList<Bot> nextPopulation = new ArrayList<Bot>();
-		int survivorCount = populationSize/3;
+		int survivorCount = populationSize/2;
 		int randomCount = populationSize/8;
 		for (int i = 0;i<survivorCount;i++) {
 			nextPopulation.add(population.get(i));
@@ -102,9 +102,9 @@ public class GeneticAlgorithim {
 			Bot newBot = nextPopulation.get(i%survivorCount).clone();
 			
 			//newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
-			double r = random.nextDouble();
+			double r = random.nextGaussian();
 			mutateBot(newBot);
-			if (r > newBot.getMutationChance()/4F) {
+			if (r > 0.8) {
 				mutateMutation(newBot);
 			}
 			
@@ -126,16 +126,20 @@ public class GeneticAlgorithim {
 	public void mutateMutation(Bot b) {
 		b.setMutationChance(b.getMutationChance() + (random.nextDouble()*2-1)/10D);
 		b.setMutationChance(Math.max(0.001, b.getMutationChance()));
-		b.setMutationPower(b.getMutationPower()  + (random.nextDouble()*2-1)*b.getMutationPower()* 0.01F);
+		//b.setMutationPower(clamp(b.getMutationPower()  + (random.nextDouble()*2-0.1F),0.01F,2F));
 		//b.setMutationPower(b.getMutationPower() - 0.01D);
 	}
 	
+	
+	public double clamp(double value, double min, double max) {
+		return Math.min(min, Math.max(max, value));
+	}
 	public void mutateBot(Bot bot) {
 		double weights[] = bot.getNeuralWeights();
 		
 		for (int i = 0; i < weights.length;i++) {
 			if (random.nextDouble() < bot.getMutationChance()) {
-				weights[i] += ((random.nextGaussian()*2)-1D)*2* bot.getMutationPower();
+				weights[i] += ((random.nextDouble()*2D)-1D)*2D* bot.getMutationPower();
 			}	
 		}
 	}

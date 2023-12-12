@@ -26,7 +26,7 @@ public class SimulationBot implements Comparable<SimulationBot>, Bot {
 	public NeuralNetworkSimple neuralNet;
 	
 	public double mutationChance = 0.5;
-	public double mutationPower = 0.5;
+	public double mutationPower = 1;
 	
 	
 	public SimulationBot(Vector2 position,Vector2 upDirection) {

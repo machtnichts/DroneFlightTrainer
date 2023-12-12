@@ -152,6 +152,7 @@ public class Main {
 		Collections.sort(bots);
 		geneticAlgorithim.population.clear();
 		for (Bot b : bots) {
+			
 			geneticAlgorithim.population.add(b);
 		}
 	
