@@ -50,7 +50,7 @@ public class SimulationBot implements Comparable<SimulationBot>, Bot {
 		bot.iterations = iterations;
 		bot.mutationChance = mutationChance;
 		bot.mutationPower = mutationPower;
-		bot.color = shiftHue(color, 0.1F);
+		//bot.color = shiftHue(color, 0.0002F);
 		for (Thruster thru : trusters) {
 			bot.addThruster(((Thruster)thru).clone());
 		}

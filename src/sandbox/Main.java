@@ -55,17 +55,17 @@ public class Main {
 				for (Bot botL : geneticAlgorithim.population) {
 					SimulationBot bot = (SimulationBot) botL;
 					
-					double angle = (Vector2.SignedAngle(bot.getDir(), new Vector2(0, 1))) / 180;
-					double xToTarget = (bot.getPosition().getX() - SandboxSettings.botGoalPosition.getX())/500D;
-					double yToTarget = (bot.getPosition().getY() - SandboxSettings.botGoalPosition.getY())/500D;
+					double angle = (Vector2.SignedAngle(bot.getDir(), new Vector2(0, 1))) / 1800;
+					double xToTarget = (bot.getPosition().getX() - SandboxSettings.botGoalPosition.getX())/1000D;
+					double yToTarget = (bot.getPosition().getY() - SandboxSettings.botGoalPosition.getY())/1000D;
 				
-					double[] input = new double[] { angle, xToTarget, yToTarget, bot.getVelocity().getX(),
-							bot.getVelocity().getY(), bot.getMomentum()};
+					double[] input = new double[] { angle, xToTarget, yToTarget, bot.getVelocity().getX()/10D,
+							bot.getVelocity().getY()/10D, bot.getMomentum()/10D};
 					
 					double[] res = bot.neuralNet.calculate(input);
 
 					for (int i = 0; i < bot.getThrusterCount(); i++) {
-
+						//System.out.println(res[i]);
 						bot.getTruster(i).setCurrentTrust(res[i]);
 					}
 				

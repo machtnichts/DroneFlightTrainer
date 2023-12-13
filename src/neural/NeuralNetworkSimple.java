@@ -31,10 +31,12 @@ public class NeuralNetworkSimple implements Cloneable{
 		}
 		
 		for (int i = 0;i < hiddenOutput.length;i++) {
-			//hiddenOutput[i] = sigmoid(hiddenOutput[i]);
+			hiddenOutput[i] = hiddenSigmoid(hiddenOutput[i]);
+			
 			if (hiddenOutput[i]<0) {
 				hiddenOutput[i] = hiddenOutput[i]/2F;
 			}
+			
 		}
 		
 		double[] output = new double[hiddenLayerSize];
@@ -46,7 +48,11 @@ public class NeuralNetworkSimple implements Cloneable{
 				weightIndex++;
 			}
 		}
-		
+		for (int j = 0;j < outputLayerSize; j++) {
+			
+			
+			 output[j] = outputSigmoid(output[j]);
+		}
 		return output;
 	}
 	
@@ -57,7 +63,11 @@ public class NeuralNetworkSimple implements Cloneable{
 		}
 		return clone;
 	}
-	 public static double sigmoid(double x) {
-	        return 1.0 / (1.0 + Math.exp(-x));
+
+	 public static double hiddenSigmoid(double x) {
+	        return (1D/(1+ Math.exp(-x)))*2-1;
+	    }
+	 public static double outputSigmoid(double x) {
+	        return (((Math.exp(x)-1D)/(Math.exp(x)+1))+1D)/2D;
 	    }
 }
