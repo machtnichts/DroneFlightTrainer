@@ -152,7 +152,6 @@ public class Main {
 		Collections.sort(bots);
 		geneticAlgorithim.population.clear();
 		for (Bot b : bots) {
-			
 			geneticAlgorithim.population.add(b);
 		}
 	
@@ -164,7 +163,7 @@ public class Main {
 	public static void calculateLastScore() {
 		for (Bot botL : geneticAlgorithim.population) {
 			SimulationBot bot = (SimulationBot) botL;
-			if (SandboxSettings.scoreSetting == ScoreSetting.EXPONATIALY_WEIGHTED_SCORE) {
+			if (SandboxSettings.scoreSetting == ScoreSetting.EXPONENTIALY_WEIGHTED_SCORE) {
 				if (bot.getLastScore() == 0) {
 					bot.setLastScore(bot.getScore());
 				}
@@ -174,8 +173,7 @@ public class Main {
 				
 			}
 			else {
-				bot.setLastScore((bot.getLastScore() * bot.getIterations() + bot.getScore())/((double) ((double)bot.getIterations() +1D)));
-			
+				bot.setLastScore((bot.getLastScore() * (double)bot.getIterations() + bot.getScore())/((double) ((double)bot.getIterations() +1D)));
 			}
 			
 		}

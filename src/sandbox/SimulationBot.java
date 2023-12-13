@@ -20,7 +20,7 @@ public class SimulationBot implements Comparable<SimulationBot>, Bot {
 	private double totalWeight;
 	private double lastScore = 0;
 	private double score = 0;
-	private int iterations = 0;
+	private double iterations = 0;
 	
 	ArrayList<Thruster> trusters = new ArrayList<Thruster>();
 	public NeuralNetworkSimple neuralNet;
@@ -43,7 +43,7 @@ public class SimulationBot implements Comparable<SimulationBot>, Bot {
 		calcNeuralNet();
 	}
 
-	public SimulationBot clone() {
+	public Bot clone() {
 		SimulationBot bot = new SimulationBot(pos,dir);
 		bot.score = score;
 		bot.lastScore = lastScore;
@@ -224,25 +224,6 @@ public class SimulationBot implements Comparable<SimulationBot>, Bot {
 		this.weight = weight;
 	}
 	
-	 public static Color shiftColor(Color originalColor, int maxShiftAmount) {
-	        Random rand = new Random();
-
-	        int red = originalColor.getRed();
-	        int green = originalColor.getGreen();
-	        int blue = originalColor.getBlue();
-
-	        // Generate random shifts for each RGB component
-	        int redShift = rand.nextInt(maxShiftAmount * 2+1) - maxShiftAmount;
-	        int greenShift = rand.nextInt(maxShiftAmount * 2+1) - maxShiftAmount;
-	        int blueShift = rand.nextInt(maxShiftAmount * 2+1) - maxShiftAmount;
-
-	        // Apply the shifts to the original color
-	        red = Math.max(0, Math.min(255, red + redShift));
-	        green = Math.max(0, Math.min(255, green + greenShift));
-	        blue = Math.max(0, Math.min(255, blue + blueShift));
-
-	        return new Color(red, green, blue);
-	    }
 	
 	@Override
 	public int compareTo(SimulationBot other) {
@@ -309,11 +290,11 @@ public class SimulationBot implements Comparable<SimulationBot>, Bot {
 		this.color = color;
 	}
 
-	public int getIterations() {
+	public double getIterations() {
 		return iterations;
 	}
 
-	public void setIterations(int iterations) {
+	public void setIterations(double iterations) {
 		this.iterations = iterations;
 	}
 
