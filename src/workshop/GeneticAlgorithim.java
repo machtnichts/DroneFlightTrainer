@@ -80,7 +80,7 @@ public class GeneticAlgorithim {
 			Bot newBot = nextPopulation.get(i%nextPopulation.size()).clone();
 			//newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
 			double r = random.nextDouble();
-			mutateBot((SimulationBot) newBot);
+			mutateBot(newBot);
 			if (r > 0.8) {
 				mutateMutation(newBot);
 			}
@@ -112,23 +112,19 @@ public class GeneticAlgorithim {
 			//net.softMutate(sigma);
 			nextPopulation.add(newBot);
 		}
-		
-	
-		
 
-	
 		for (int i = 0;i<randomCount;i++) {
 			nextPopulation.add(SandboxSettings.createBot());
 		}
-		System.out.println(nextPopulation.size());
+		
 		population = nextPopulation;
 	}
 	
 	public void mutateMutation(Bot b) {
 		
-		b.setMutationChance(b.getMutationChance() + (random.nextDouble()*2-1)/10D);
-		b.setMutationChance(Math.max(0.001, b.getMutationChance()));
-		b.setMutationPower(b.getMutationPower() + (random.nextDouble()*2-1)/10D);
+		b.setMutationChance(b.getMutationChance() + (random.nextDouble()*2D-1D)/10D);
+		b.setMutationChance(Math.max(0.001D, b.getMutationChance()));
+		b.setMutationPower(b.getMutationPower() + (random.nextDouble()*2D-1D)/10D);
 		/*
 		b.setMutationChance(b.getMutationChance() + (random.nextGaussian()*2-1)/10D);
 		b.setMutationChance(Math.max(0.001, b.getMutationChance()));
@@ -147,22 +143,12 @@ public class GeneticAlgorithim {
 		
 		for (int i = 0; i < weights.length;i++) {
 			if (random.nextDouble() < bot.getMutationChance()) {
-				weights[i] += ((random.nextGaussian()*2D)-1D)*2D* bot.getMutationPower();
+				weights[i] += ((random.nextGaussian()*2D)-1D)*bot.getMutationPower();
 			}	
 		}
 	}
 	
 	
-	public void mutateBotEmpty(SimulationBot bot) {
-		// mutationChance: chance for an mutation to occur for each neuron
-		// mutationPower: strength of a mutation if it occurs
-		
-		// bot.neuralNet will give you an instance of the neural net
-		// use neuralNet.weights to get a double array of all the weights
-		
-		// Well then, change some weights around
-		// If you don't want to you don't have to use the mutationChance and mutationPower
-	}
 	
 	
 	
