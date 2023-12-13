@@ -1,6 +1,7 @@
 package sandbox;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Label;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class Main {
 	public static GeneticAlgorithim geneticAlgorithim = new GeneticAlgorithim();
 	static int gen = 0;
 	public static ArrayList<Double> plotScores = new ArrayList<Double>(); 
+	public static ArrayList<Color> plotColors = new ArrayList<Color>(); 
 	public static Scatterplot plot;
 	
 	// Buggs : Concurrent modifier in Simulation screen
@@ -108,18 +110,20 @@ public class Main {
 					geneticAlgorithim.calculateNextPopulation(gen);
 					
 					if (plot != null) {
-						plot.setData(plotScores);
+						plot.setData(plotScores,plotColors);
 						plot.update();
 					}
 					
 				
 					if (SandboxSettings.scoreSetting == ScoreSetting.BASIC_SCORE) {
 						plotScores.add(lastBest.getScore());
+						plotColors.add(lastBest.getColor());
 						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.getScore() + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
 						
 					}
 					else {
 						plotScores.add(lastBest.getLastScore());
+						plotColors.add(lastBest.getColor());
 						textLabel.setText("Generation "+gen +" | Best Score "+ lastBest.getLastScore() + " Mutation ["+ lastBest.mutationChance +" | "+ lastBest.mutationPower +"]");
 					}
 					
