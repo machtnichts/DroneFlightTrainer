@@ -226,7 +226,7 @@ public class SimulationBot implements Comparable<SimulationBot>, Bot {
 	
 	@Override
 	public int compareTo(SimulationBot other) {
-		if (SandboxSettings.scoreSetting == ScoreSetting.AVERAGED_SCORE) {
+		if (SandboxSettings.scoreSetting != ScoreSetting.BASIC_SCORE) {
 			if (other.lastScore > lastScore) {
 				return 1;
 			}

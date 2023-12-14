@@ -57,12 +57,12 @@ public class Main {
 				for (Bot botL : geneticAlgorithim.population) {
 					SimulationBot bot = (SimulationBot) botL;
 					
-					double angle = (Vector2.SignedAngle(bot.getDir(), new Vector2(0, 1))) / 1800;
-					double xToTarget = (bot.getPosition().getX() - SandboxSettings.botGoalPosition.getX())/1000D;
-					double yToTarget = (bot.getPosition().getY() - SandboxSettings.botGoalPosition.getY())/1000D;
+					double angle = (Vector2.SignedAngle(bot.getDir(), new Vector2(0, 1))) / 180;
+					double xToTarget = (bot.getPosition().getX() - SandboxSettings.botGoalPosition.getX())/500D;
+					double yToTarget = (bot.getPosition().getY() - SandboxSettings.botGoalPosition.getY())/500D;
 				
-					double[] input = new double[] { angle, xToTarget, yToTarget, bot.getVelocity().getX()/10D,
-							bot.getVelocity().getY()/10D, bot.getMomentum()/10D};
+					double[] input = new double[] { angle, xToTarget, yToTarget, bot.getVelocity().getX(),
+							bot.getVelocity().getY(), bot.getMomentum()};
 					
 					double[] res = bot.neuralNet.calculate(input);
 
@@ -84,10 +84,12 @@ public class Main {
 				}
 				if (SandboxSettings.targetSetting ==  TargetSetting.CANT_CATCH_ME) {
 					
-					
+					if (currentTick % 300 == 0) {
+						SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 700,(random.nextDouble()*2-1) * 700);
+					}
 					targetVel = targetVel.add(new Vector2(random.nextDouble()*2-1,random.nextDouble()*2-1).mult(0.1F));
 					SandboxSettings.botGoalPosition = SandboxSettings.botGoalPosition.add(targetVel);
-					if (SandboxSettings.botGoalPosition.magnitude() > 2000) {
+					if (SandboxSettings.botGoalPosition.magnitude() > 1200) {
 						targetVel = new Vector2(0,0);
 						SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
 					}
@@ -169,7 +171,7 @@ public class Main {
 					bot.setLastScore(bot.getScore());
 				}
 				else {
-					bot.setLastScore(bot.getLastScore() * 0.9F + bot.getScore()*0.1F);
+					bot.setLastScore(bot.getLastScore() * 0.7F + bot.getScore()*0.3F);
 				}
 				
 			}
