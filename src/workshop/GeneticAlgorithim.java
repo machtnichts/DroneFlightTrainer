@@ -1,19 +1,15 @@
 package workshop;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
-
 import sandbox.Bot;
 import sandbox.SimulationBot;
-import utils.Vector2;
 
 public class GeneticAlgorithim {
 
 	public ArrayList<Bot> population = new ArrayList<Bot>();
 
-	public final int populationSize = 150;
+	public final int populationSize = 100;
 	Random random = new Random();
 
 	public void initPopulation() {
@@ -102,7 +98,7 @@ public class GeneticAlgorithim {
 			// newBot.neuralNet.gen = nextPopulation.get(i%survivalCount).neuralNet.gen + 1;
 
 			mutateBot(newBot);
-			mutateMutationChance(newBot);
+			mutateMutation(newBot);
 
 			// net.softMutate(sigma);
 			nextPopulation.add(newBot);

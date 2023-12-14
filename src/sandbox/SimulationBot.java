@@ -2,7 +2,6 @@ package sandbox;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Random;
 import neural.NeuralNetworkSimple;
 import utils.Vector2;
 import workshop.SandboxSettings;
@@ -50,7 +49,7 @@ public class SimulationBot implements Comparable<SimulationBot>, Bot {
 		bot.iterations = iterations;
 		bot.mutationChance = mutationChance;
 		bot.mutationPower = mutationPower;
-		//bot.color = shiftHue(color, 0.0002F);
+		bot.color = shiftHue(color, 0.02F);
 		for (Thruster thru : trusters) {
 			bot.addThruster(((Thruster)thru).clone());
 		}
