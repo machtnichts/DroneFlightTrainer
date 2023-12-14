@@ -83,14 +83,11 @@ public class Main {
 					}
 				}
 				if (SandboxSettings.targetSetting ==  TargetSetting.CANT_CATCH_ME) {
-					if (currentTick % 300 == 0) {
-						targetVel = new Vector2(0,0);
-						SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 700,(random.nextDouble()*2-1) * 700);
-					}
+					
 					
 					targetVel = targetVel.add(new Vector2(random.nextDouble()*2-1,random.nextDouble()*2-1).mult(0.1F));
 					SandboxSettings.botGoalPosition = SandboxSettings.botGoalPosition.add(targetVel);
-					if (SandboxSettings.botGoalPosition.magnitude() > 800) {
+					if (SandboxSettings.botGoalPosition.magnitude() > 2000) {
 						targetVel = new Vector2(0,0);
 						SandboxSettings.botGoalPosition = new Vector2((random.nextDouble()*2-1) * 400,(random.nextDouble()*2-1) * 400);
 					}
@@ -265,7 +262,7 @@ public class Main {
 	        for (int i = 0; i < plotScores.size(); i++) {
 	            array[i] = plotScores.get(i);
 	        }
-	        plot = new Scatterplot(array);
+	        plot = new Scatterplot(array,plotColors);
 	}
 	
 

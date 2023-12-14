@@ -9,15 +9,15 @@ import javax.swing.JPanel;
 
 public class Scatterplot {
 
-	private static final int WIDTH = 500;
-	private static final int HEIGHT = 400;
-	private static final int MARGIN = 50;
+	private static  int WIDTH = 500;
+	private static  int HEIGHT = 400;
+	private static  int MARGIN = 50;
 	Color color;
 	ArrayList<Color> colors;
 	double[] xData;
 	double[] yData;
 
-	public Scatterplot(double[] data) {
+	public Scatterplot(double[] data, ArrayList<Color> colors) {
 		color = Color.getHSBColor((float) Math.random(), 0.9F, 0.7F);
 		yData = data;
 		xData = new double[data.length];
@@ -43,9 +43,9 @@ public class Scatterplot {
 	}
 
 	JPanel panel;
-
+	JFrame frame;
 	private void createAndShowGUI() {
-		JFrame frame = new JFrame("Score over Generations");
+		 frame = new JFrame("Score over Generations");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(WIDTH, HEIGHT + 30);
 
@@ -68,6 +68,8 @@ public class Scatterplot {
 
 	private void drawScatterPlot(Graphics g) {
 
+		WIDTH = frame.getWidth();
+		HEIGHT = frame.getHeight();
 		int xAxisLength = WIDTH - 2 * MARGIN;
 		int yAxisLength = HEIGHT - 2 * MARGIN;
 
@@ -86,7 +88,9 @@ public class Scatterplot {
 			int x = MARGIN + (int) ((xData[i] - getMin(xData)) / (getMax(xData) - getMin(xData)) * xAxisLength);
 			int y = MARGIN + (int) ((yData[i]) / (getMin(yData)) * yAxisLength);
 
+			if (colors != null)
 			g.setColor(colors.get(i));
+
 			g.fillOval(x - 3, y - 3, 6, 6);
 		}
 	}
