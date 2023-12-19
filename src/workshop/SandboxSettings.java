@@ -10,18 +10,40 @@ import utils.Vector2;
 public class SandboxSettings {
 
 	// Settings for Simulation. Have fun!
+	/* Coordinates are set up like in standard math */
+	
+	/* Direction of the Bot when spawned | 0 1 is up */
 	public static Vector2 botUpVector = new Vector2(0,1);
+
+	/* Position of the bot when spawned | 0 0 is the middle of the screen */
 	public static Vector2 botSpawnPosition = new Vector2(0,0);
+
+	/* Position of the goal when spawned (If it doesnt move) */
 	public static Vector2 botGoalPosition = new Vector2(0,400);
-	public static TargetSetting targetSetting = TargetSetting.CANT_CATCH_ME;
+
+	/* Targetsetting can make the target move (harder to solve)*/
+	public static TargetSetting targetSetting = TargetSetting.STATIC_TARGET;
+
+	/* How the score is calculated: Basic Score uses the score of the last simulation to sort the population
+	 * while Exponetialy weigthed keeps a exponentialy weighted average over all past scores
+	 * This helps with moving targets
+	*/
 	public static ScoreSetting scoreSetting = ScoreSetting.EXPONENTIALY_WEIGHTED_SCORE;
+
+	/* Amount of steps before a simulation ends */
 	public static int simulationSteps = 500;
+
+	/* A factor that inscreases the simulationSteps value over the generation count*/
 	public static float additionalSimulationStepsPerGeneration = 0.02F;
+
+	/* The scale of the hidden layer of the neural network */
 	public static int hiddenLayerSize = 2;
 	
 	
 	
-	
+	/*
+	 *  This Function creates a new Bot with an empty neural network
+	 */
 	public static Bot createBot() {
 
 
