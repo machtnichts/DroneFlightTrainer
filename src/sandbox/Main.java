@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 
 
-import neural.NeuralNetworkSimple;
+
 import utils.Vector2;
 import workshop.GeneticAlgorithim;
 import workshop.SandboxSettings;
