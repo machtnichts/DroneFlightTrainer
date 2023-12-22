@@ -49,6 +49,7 @@ public class SimulationScreen extends Canvas implements KeyListener{
 			drawBot(bot,bot.getColor(),g2d);
 			
 		}
+		if (Main.geneticAlgorithim.population.size() > 0)
 		drawBot((SimulationBot) Main.geneticAlgorithim.population.get(0),Color.white,g2d);
 	
 		

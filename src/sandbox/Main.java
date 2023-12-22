@@ -100,6 +100,9 @@ public class Main {
 				}
 				
 				if (currentTick > SandboxSettings.simulationSteps + gen * SandboxSettings.additionalSimulationStepsPerGeneration) {
+					if (geneticAlgorithim.population.size() <= 0)
+					return;
+
 					calculateLastScore();
 			
 					currentTick = 0;
@@ -208,7 +211,7 @@ public class Main {
 	        shiftSlider.setPaintTicks(true);
 	        shiftSlider.setPaintLabels(true);
 	    
-	        textLabel = new JLabel("Your Text Here", JLabel.CENTER);
+	        textLabel = new JLabel("Waiting for something to happen", JLabel.CENTER);
 	        textLabel.setFont(textLabel.getFont().deriveFont(16.0f)); 
 	        panel.add(textLabel, BorderLayout.NORTH);
 
