@@ -2,18 +2,19 @@ package sandbox;
 
 import utils.Vector2;
 
-public interface Bot {
+public interface Bot extends Comparable<Bot>{
 
 	public Vector2 getPosition();
 	public Vector2 getVelocity();
 	public double getAngle();
 	public double getAngularMomentum();
 	
+	public double getAveragedScore();
 	public double getScore();
 	public void setScore(double score);
 	public void addScore(double score);
 	
-	public void setWeight(double weight);
+	public void setCapsuleWeight(double weight);
 	public void addThruster(Thruster t);
 	
 	public Bot clone();

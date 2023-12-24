@@ -6,7 +6,7 @@ import neural.NeuralNetworkSimple;
 import utils.Vector2;
 import workshop.SandboxSettings;
 
-public class SimulationBot implements Comparable<SimulationBot>, Bot {
+public class SimulationBot implements Bot {
 	
 
 	private Color color = Color.getHSBColor((float) Math.random(), 1, 0.8F);
@@ -111,7 +111,7 @@ public class SimulationBot implements Comparable<SimulationBot>, Bot {
 	}
 
 	
-	public void setWeight(double d) {
+	public void setCapsuleWeight(double d) {
 		weight = d;
 		
 	}
@@ -225,21 +225,21 @@ public class SimulationBot implements Comparable<SimulationBot>, Bot {
 	
 	
 	@Override
-	public int compareTo(SimulationBot other) {
+	public int compareTo(Bot other) {
 		if (SandboxSettings.scoreSetting != ScoreSetting.BASIC_SCORE) {
-			if (other.lastScore > lastScore) {
+			if (other.getAveragedScore() > getAveragedScore()) {
 				return 1;
 			}
-			if (other.lastScore < lastScore) {
+			if (other.getAveragedScore() < getAveragedScore()) {
 				return -1;
 			}
 			return 0;
 		}
 		else {
-			if (other.score > score) {
+			if (other.getScore() > getScore()) {
 				return 1;
 			}
-			if (other.score < score) {
+			if (other.getScore() < getScore()) {
 				return -1;
 			}
 			return 0;
@@ -374,6 +374,11 @@ public class SimulationBot implements Comparable<SimulationBot>, Bot {
 	public void setNeuralWeights(double[] weights) {
 		neuralNet.weights = weights;
 		
+	}
+
+	@Override
+	public double getAveragedScore() {
+		return lastScore;
 	}
 
 	

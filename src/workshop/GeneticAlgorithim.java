@@ -1,12 +1,15 @@
 package workshop;
 
+
 import java.util.ArrayList;
+import java.util.List;
+
 import sandbox.Bot;
 
 
 public class GeneticAlgorithim {
 
-	public ArrayList<Bot> population = new ArrayList<Bot>();
+	public List<Bot> population = new ArrayList<Bot>();
 
 	public final int populationSize = 100;
 
@@ -36,7 +39,7 @@ public class GeneticAlgorithim {
 	}
 
 	public void calculateNextPopulation(int genNumber) {
-		// The current population is inside the list: population IT IS SORTED FOR YOU (low to high)
+		// The current population is inside the list: population IT IS SORTED FOR YOU (high to low | best to worst)
 		// At the end of this method the population list should be filled with the next generation
 
 		/*

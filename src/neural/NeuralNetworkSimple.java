@@ -39,7 +39,7 @@ public class NeuralNetworkSimple implements Cloneable{
 			*/
 		}
 		
-		double[] output = new double[hiddenLayerSize];
+		double[] output = new double[outputLayerSize];
 		for (int j = 0;j < outputLayerSize; j++) {
 			
 			for (int i = 0; i < hiddenLayerSize; i++) {
