@@ -9,7 +9,7 @@ public class GeneticAlgorithim {
 
 	public ArrayList<Bot> population = new ArrayList<Bot>();
 
-	public final int populationSize = 200;
+	public final int populationSize = 5000;
 	Random random = new Random();
 
 	public void initPopulation() {

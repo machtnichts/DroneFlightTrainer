@@ -26,6 +26,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
 import utils.Vector2;
@@ -45,6 +46,7 @@ public class Main {
 	private final static DecimalFormatSymbols dfs = new DecimalFormatSymbols(Locale.ROOT);
 	private final static DecimalFormat df = new DecimalFormat("#0.000");
 	private static Instant start = Instant.now();
+	private static Instant lastUpdate = Instant.now();
 
 	public final static AtomicBoolean insideSort = new AtomicBoolean(false);
 	// Buggs : Concurrent modifier in Simulation screen
@@ -61,21 +63,22 @@ public class Main {
 			Vector2 targetVel = new Vector2(0, 0);
 
 			public void simulateFrame(SimulationBot bot) {
-				double angle = (Vector2.SignedAngle(bot.getDir(), new Vector2(0, 1))) ;
+				double angle = (Vector2.SignedAngle(bot.getDir(), new Vector2(0, 1)));
 				double xToTarget = (bot.getPosition().getX() - SandboxSettings.botGoalPosition.getX());
-				double yToTarget = (bot.getPosition().getY() - SandboxSettings.botGoalPosition.getY()) ;
+				double yToTarget = (bot.getPosition().getY() - SandboxSettings.botGoalPosition.getY());
 
-				double[] input = new double[] { angle/180D, xToTarget/1000D, yToTarget/1000D, bot.getVelocity().getX()/10D,
-						bot.getVelocity().getY()/10D, bot.getMomentum()/180D };
+				double[] input = new double[] { angle / 180D, xToTarget / 1000D, yToTarget / 1000D,
+						bot.getVelocity().getX() / 10D,
+						bot.getVelocity().getY() / 10D, bot.getMomentum() / 180D };
 
 				double[] res = bot.neuralNet.calculate(input);
 
 				for (double r : res) {
 					if (Double.isNaN(r)) {
 						System.out.println("----");
-						System.out.println("In "+Arrays.toString(input));
-						System.out.println("Res "+Arrays.toString(res));
-						System.out.println("Wei "+Arrays.toString(bot.getNeuralWeights()));
+						System.out.println("In " + Arrays.toString(input));
+						System.out.println("Res " + Arrays.toString(res));
+						System.out.println("Wei " + Arrays.toString(bot.getNeuralWeights()));
 						System.exit(-1);
 						break;
 
@@ -94,13 +97,23 @@ public class Main {
 			public void run() {
 
 				int fast = shiftSlider.getValue();
-				for (int a = 0; a < fast; a++) {
+
+				if (fast < 50) {
+					try {
+						Thread.sleep((50 - fast) * 1);
+					} catch (InterruptedException e) {
+
+						e.printStackTrace();
+					}
+				}
+				int steps = Math.max(fast - 50, 1);
+				for (int a = 0; a < steps; a++) {
 
 					geneticAlgorithim.population.parallelStream()
 							.filter(SimulationBot.class::isInstance).map(SimulationBot.class::cast)
 							.forEach(bot -> simulateFrame(bot));
 
-					moveTargetDuringSimulation(targetVel,currentTick);
+					moveTargetDuringSimulation(targetVel, currentTick);
 
 					if (currentTick > SandboxSettings.simulationSteps
 							+ gen * SandboxSettings.additionalSimulationStepsPerGeneration) {
@@ -123,13 +136,14 @@ public class Main {
 							SandboxSettings.botGoalPosition = Vector2.turnDeg(SandboxSettings.botGoalPosition,
 									Math.random() * 360F);
 
-						if (SandboxSettings.targetSetting == TargetSetting.CHANGE_TARGET_EACH_RUN || SandboxSettings.targetSetting == TargetSetting.CANT_CATCH_ME) {
-								SandboxSettings.botGoalPosition = new Vector2((random.nextDouble() * 2 - 1) * 500,
+						if (SandboxSettings.targetSetting == TargetSetting.CHANGE_TARGET_EACH_RUN
+								|| SandboxSettings.targetSetting == TargetSetting.CANT_CATCH_ME) {
+							SandboxSettings.botGoalPosition = new Vector2((random.nextDouble() * 2 - 1) * 500,
 									(random.nextDouble() * 2 - 1) * 500);
 						}
 						if (SandboxSettings.targetSetting == TargetSetting.CANT_CATCH_ME) {
-								targetVel = new Vector2(0,0);
-								SandboxSettings.botGoalPosition = new Vector2((random.nextDouble() * 2 - 1) * 500,
+							targetVel = new Vector2(0, 0);
+							SandboxSettings.botGoalPosition = new Vector2((random.nextDouble() * 2 - 1) * 500,
 									(random.nextDouble() * 2 - 1) * 500);
 						}
 					}
@@ -141,77 +155,87 @@ public class Main {
 			}
 
 			private void updateUI() {
-				long genPerSecond = (genNumber * 1000L * geneticAlgorithim.population.size())/Duration.between(start,Instant.now()).toMillis();
+				long genPerSecond = (genNumber * 1000L * geneticAlgorithim.population.size())
+							/ Duration.between(start, Instant.now()).toMillis();
 
-				if (plot != null) {
-					plot.setData(plotScores, plotColors);
-					plot.update();
-				}
-				
-				if (SandboxSettings.scoreSetting == ScoreSetting.BASIC_SCORE) {
-					plotScores.add(lastBest.getScore());
-					plotColors.add(lastBest.getColor());
-					textLabel.setText("Generation " + gen + " | Best Score " + df.format(lastBest.getScore())
-							+ " Mutation [" + df.format(lastBest.mutationChance) + " | " + df.format(lastBest.mutationPower) + "] "+" SPS: " +genPerSecond);
+				String text;
+					if (SandboxSettings.scoreSetting == ScoreSetting.BASIC_SCORE) {
+						plotScores.add(lastBest.getScore());
+						plotColors.add(lastBest.getColor());
+						text = "Generation " + gen + " | Best Score " + df.format(lastBest.getScore())
+								+ " Mutation [" + df.format(lastBest.mutationChance) + " | "
+								+ df.format(lastBest.mutationPower) + "] " + " SPS: " + genPerSecond;
+					} else {
+						text = "Generation " + gen + " | Best Score " + df.format(lastBest.getLastScore())
+								+ " Mutation [" + df.format(lastBest.mutationChance) + " | "
+								+ df.format(lastBest.mutationPower) + "] " + " SPS: " + genPerSecond;
+						plotScores.add(lastBest.getLastScore());
+						plotColors.add(lastBest.getColor());
+					}
 
-				} else {
-					plotScores.add(lastBest.getLastScore());
-					plotColors.add(lastBest.getColor());
-					textLabel.setText("Generation " + gen + " | Best Score " + df.format(lastBest.getLastScore())
-							+ " Mutation [" + df.format(lastBest.mutationChance) + " | " + df.format(lastBest.mutationPower) + "] "+" SPS: " +genPerSecond);
+				if (Duration.between(lastUpdate, Instant.now()).toMillis() > 250) {
+					lastUpdate = Instant.now();
+
+					
+					if (plot != null) {
+						plot.setData(plotScores, plotColors);
+						plot.update();
+					}
+					textLabel.setText(text);
+	
 				}
 			}
 		};
 
 	}
 
-	public static void moveTargetDuringSimulation(Vector2 targetVel,int currentTick) {
+	public static void moveTargetDuringSimulation(Vector2 targetVel, int currentTick) {
 
 		if (simulationScreen.holdingMouse) {
-			
+
 			Point mousePosition = MouseInfo.getPointerInfo().getLocation();
 			Point canvasLocation = simulationScreen.getLocationOnScreen();
-			
+
 			// Calculate the mouse position relative to the canvas
-			int mouseX = (int) (((mousePosition.x - canvasLocation.x) - simulationScreen.getWidth()/2)/simulationScreen.disp_scale);
-			int mouseY = -(int) (((mousePosition.y - canvasLocation.y)- simulationScreen.getHeight()/2)/simulationScreen.disp_scale);
+			int mouseX = (int) (((mousePosition.x - canvasLocation.x) - simulationScreen.getWidth() / 2)
+					/ simulationScreen.disp_scale);
+			int mouseY = -(int) (((mousePosition.y - canvasLocation.y) - simulationScreen.getHeight() / 2)
+					/ simulationScreen.disp_scale);
 			SandboxSettings.botGoalPosition.setX(mouseX);
 			SandboxSettings.botGoalPosition.setY(mouseY);
 			return;
 		}
-	if (SandboxSettings.targetSetting == TargetSetting.CHANGE_TARGET_DURING_RUN) {
-						if (currentTick % 300 == 0) {
-							SandboxSettings.botGoalPosition = new Vector2((random.nextDouble() * 2 - 1) * 700,
-									(random.nextDouble() * 2 - 1) * 700);
-						}
-					}
-					if (SandboxSettings.targetSetting == TargetSetting.CANT_CATCH_ME) {
+		if (SandboxSettings.targetSetting == TargetSetting.CHANGE_TARGET_DURING_RUN) {
+			if (currentTick % 300 == 0) {
+				SandboxSettings.botGoalPosition = new Vector2((random.nextDouble() * 2 - 1) * 700,
+						(random.nextDouble() * 2 - 1) * 700);
+			}
+		}
+		if (SandboxSettings.targetSetting == TargetSetting.CANT_CATCH_ME) {
 
-						if (currentTick % 300 == 0) {
-							SandboxSettings.botGoalPosition = new Vector2((random.nextDouble() * 2 - 1) * 700,
-									(random.nextDouble() * 2 - 1) * 700);
-						}
-						targetVel = targetVel
-								.add(new Vector2(random.nextDouble() * 2 - 1, random.nextDouble() * 2 - 1).mult(0.1F));
-						SandboxSettings.botGoalPosition = SandboxSettings.botGoalPosition.add(targetVel);
-					
+			if (currentTick % 300 == 0) {
+				SandboxSettings.botGoalPosition = new Vector2((random.nextDouble() * 2 - 1) * 700,
+						(random.nextDouble() * 2 - 1) * 700);
+			}
+			targetVel = targetVel
+					.add(new Vector2(random.nextDouble() * 2 - 1, random.nextDouble() * 2 - 1).mult(0.1F));
+			SandboxSettings.botGoalPosition = SandboxSettings.botGoalPosition.add(targetVel);
 
-					}
-					if (SandboxSettings.targetSetting == TargetSetting.MOVE_CIRCULAR) {
-						SandboxSettings.botGoalPosition = Vector2.turnDeg(SandboxSettings.botGoalPosition, 0.5F);
-					}
+		}
+		if (SandboxSettings.targetSetting == TargetSetting.MOVE_CIRCULAR) {
+			SandboxSettings.botGoalPosition = Vector2.turnDeg(SandboxSettings.botGoalPosition, 0.5F);
+		}
 	}
 
 	public static void sortPopulation() {
 		List<SimulationBot> bots = new ArrayList<>(geneticAlgorithim.population.stream()
 				.filter(SimulationBot.class::isInstance).map(SimulationBot.class::cast).collect(Collectors.toList()));
 		insideSort.set(true);
-		try{
-			Collections.sort(bots);}
-			catch(Throwable t)
-			{
-				System.out.println("sdf");
-			}
+		try {
+			Collections.sort(bots);
+		} catch (Throwable t) {
+			System.out.println("sdf");
+		}
 		insideSort.set(false);
 		geneticAlgorithim.population = new ArrayList<>(bots);
 	}
@@ -252,15 +276,17 @@ public class Main {
 	static JSlider shiftSlider;
 	static JSlider zoomSlider;
 	static JLabel textLabel;
+	static JToggleButton toggleButton;
 	static SimulationScreen simulationScreen;
+
 	public static SimulationScreen initScreen() {
-		 simulationScreen = new SimulationScreen();
-		
+		simulationScreen = new SimulationScreen();
+
 		JFrame f = new JFrame("Workshop");
 
 		JPanel panel = new JPanel(new BorderLayout());
 
-		shiftSlider = new JSlider(JSlider.HORIZONTAL, 1, 150, 1);
+		shiftSlider = new JSlider(JSlider.HORIZONTAL, 1, 100, 1);
 		shiftSlider.setMajorTickSpacing(0);
 		shiftSlider.setMinorTickSpacing(0);
 		shiftSlider.setPaintTicks(true);
@@ -282,6 +308,18 @@ public class Main {
 		JButton button = new JButton("Plot score");
 		button.addActionListener(e -> generatePlot());
 
+		  toggleButton = new JToggleButton("Best only");
+        toggleButton.addActionListener(e -> {
+            // Add your toggle button action here
+            if (toggleButton.isSelected()) {
+                // Toggle button is selected
+                textLabel.setText("Toggle button is selected");
+            } else {
+                // Toggle button is not selected
+                textLabel.setText("Toggle button is not selected");
+            }
+        });
+
 		// Use FlowLayout for the panel containing the button
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -293,6 +331,7 @@ public class Main {
 		buttonPanel.add(new JLabel(" "));
 		buttonPanel.add(new JLabel("Simulation Speed"));
 		buttonPanel.add(shiftSlider);
+		buttonPanel.add(toggleButton);
 		panel.add(buttonPanel, BorderLayout.WEST);
 
 		panel.add(simulationScreen, BorderLayout.CENTER);
@@ -307,7 +346,6 @@ public class Main {
 		f.addKeyListener(simulationScreen);
 		f.pack();
 
-		
 		return simulationScreen;
 	}
 

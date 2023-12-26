@@ -22,7 +22,7 @@ public class SandboxSettings {
 	public static Vector2 botGoalPosition = new Vector2(0,400);
 
 	/* Targetsetting can make the target move (harder to solve)*/
-	public static final TargetSetting targetSetting = TargetSetting.CANT_CATCH_ME;
+	public static final TargetSetting targetSetting = TargetSetting.STATIC_TARGET;
 
 	/* How the score is calculated: Basic Score uses the score of the last simulation to sort the population
 	 * while exponentially weigthed keeps an exponentially weighted average over all past scores
@@ -49,14 +49,17 @@ public class SandboxSettings {
 
 		Bot bot = new SimulationBot(botSpawnPosition,botUpVector);
 		
-		bot.setCapsuleWeight(1);
+		bot.setCapsuleWeight(5);
+
+		bot.addThruster(new Thruster(new Vector2(60, 0), new Vector2(0, -1), 150, 1));
 		// Basic drone with two thrusters
-		bot.addThruster(new Thruster(new Vector2(60, 0), new Vector2(0, -1), 150, 5));
-		bot.addThruster(new Thruster(new Vector2(-60, 0), new Vector2(0, -1), 150, 5));
+		//bot.addThruster(new Thruster(new Vector2(60, 0), new Vector2(0, -1), 150, 5));
+		//bot.addThruster(new Thruster(new Vector2(-60, 0), new Vector2(0, -1), 150, 5));
 		
 		
-		/*
+		
 		 //Balance Drone
+		 /*
 		bot.addThruster(new Thruster(new Vector2(0, -70), new Vector2(0, -1), 900, 50));
 		bot.addThruster(new Thruster(new Vector2(20, -150), new Vector2(1, 0), 85, 5));
 		bot.addThruster(new Thruster(new Vector2(-20,-150), new Vector2(-1, 0), 85, 5));
