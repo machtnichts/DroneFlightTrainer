@@ -5,10 +5,13 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Label;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -32,6 +35,7 @@ public class Main {
 	public static ArrayList<Color> plotColors = new ArrayList<Color>();
 	public static Scatterplot plot;
 
+	public final static AtomicBoolean insideSort = new AtomicBoolean(false);
 	// Buggs : Concurrent modifier in Simulation screen
 	public static Random random;
 
@@ -55,6 +59,17 @@ public class Main {
 
 				double[] res = bot.neuralNet.calculate(input);
 
+				for (double r : res) {
+					if (Double.isNaN(r)) {
+						System.out.println("----");
+						System.out.println("In "+Arrays.toString(input));
+						System.out.println("Res "+Arrays.toString(res));
+						System.out.println("Wei "+Arrays.toString(bot.getNeuralWeights()));
+						System.exit(-1);
+						break;
+
+					}
+				}
 				for (int i = 0; i < bot.getThrusterCount(); i++) {
 					// System.out.println(res[i]);
 					bot.getTruster(i).setCurrentTrust(res[i]);
@@ -153,8 +168,15 @@ public class Main {
 
 	public static void sortPopulation() {
 		List<SimulationBot> bots = new ArrayList<>(geneticAlgorithim.population.stream()
-				.filter(SimulationBot.class::isInstance).map(SimulationBot.class::cast).toList());
-		Collections.sort(bots);
+				.filter(SimulationBot.class::isInstance).map(SimulationBot.class::cast).collect(Collectors.toList()));
+		insideSort.set(true);
+		try{
+			Collections.sort(bots);}
+			catch(Throwable t)
+			{
+				System.out.println("sdf");
+			}
+		insideSort.set(false);
 		geneticAlgorithim.population = new ArrayList<>(bots);
 	}
 

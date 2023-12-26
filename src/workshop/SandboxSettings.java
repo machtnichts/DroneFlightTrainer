@@ -22,13 +22,13 @@ public class SandboxSettings {
 	public static Vector2 botGoalPosition = new Vector2(0,400);
 
 	/* Targetsetting can make the target move (harder to solve)*/
-	public static TargetSetting targetSetting = TargetSetting.STATIC_TARGET;
+	public static final TargetSetting targetSetting = TargetSetting.CANT_CATCH_ME;
 
 	/* How the score is calculated: Basic Score uses the score of the last simulation to sort the population
-	 * while exponetially weigthed keeps a exponentially weighted average over all past scores
+	 * while exponentially weigthed keeps an exponentially weighted average over all past scores
 	 * This helps with moving targets
 	*/
-	public static ScoreSetting scoreSetting = ScoreSetting.BASIC_SCORE;
+	public static final ScoreSetting scoreSetting = ScoreSetting.EXPONENTIALY_WEIGHTED_SCORE;
 
 	/* Amount of steps before a simulation ends */
 	public static int simulationSteps = 500;

@@ -31,9 +31,7 @@ public class Vector2 {
 		return x*x+y*y;
 				
 	}
-	public boolean equals(Vector2 other) {
-		return (other.x ==x && other.y == y);
-	}
+
 	
 	public Vector2 clone() {
 		return new Vector2(x,y);
@@ -64,7 +62,11 @@ public class Vector2 {
 	
 	public static double getAngle(Vector2 v1,Vector2 v2) {
 		
-		return Math.toDegrees(Math.atan2(v2.y, v2.x) -  Math.atan2(v1.y, v1.x));
+		double res = Math.toDegrees(Math.atan2(v2.y, v2.x) -  Math.atan2(v1.y, v1.x));
+		if (Double.isNaN(res)) {
+			return 0;
+		}
+		return res;
 		//return dotProduct(v1, v2)/(v1.magnitude()*v2.magnitude());
 	}	
 	
@@ -84,7 +86,7 @@ public class Vector2 {
 		if (re.equals(new Vector2(0,0))) {
 			return re;
 		}
-		return 	re.mult( 1/magnitude());
+		return 	re.mult( 1D/magnitude());
 				
 	}
 	

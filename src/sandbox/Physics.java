@@ -40,7 +40,8 @@ public class Physics {
 			
 			Vector2 vel = t.getAbsoluteDirection().mult(-t.getCurrentTrust()*t.getMaxTrust());
 			Vector2 aV = t.getAbsolutePos().sub(bot.getAbsoluteCenterOfMass());
-
+			
+			if (totalMomentOfInertia != 0)
 			totalAngle += Vector2.crossProduct(vel, aV)/totalMomentOfInertia;
 			
 		

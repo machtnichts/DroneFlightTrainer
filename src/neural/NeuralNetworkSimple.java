@@ -68,6 +68,6 @@ public class NeuralNetworkSimple implements Cloneable{
 	        return (1D/(1+ Math.exp(-x)))*2-1;
 	    }
 	 public static double outputSigmoid(double x) {
-	        return (((Math.exp(x)-1D)/(Math.exp(x)+1))+1D)/2D;
+			 return (1D/(1+ Math.exp(-x)));
 	    }
 }
