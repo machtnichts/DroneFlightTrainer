@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 
@@ -13,7 +15,7 @@ import utils.Vector2;
 
 import workshop.SandboxSettings;
 
-public class SimulationScreen extends Canvas implements KeyListener{
+public class SimulationScreen extends Canvas implements KeyListener, MouseListener {
 	
 	private static final int RAD = 10;
 	private static final int SQR = 10;
@@ -21,12 +23,12 @@ public class SimulationScreen extends Canvas implements KeyListener{
 	
 	
 	public SimulationScreen() {
-	
+		addMouseListener(this);
 	}
 	
 	public static int i = 0;
 
-	public static double  disp_scale = 0.3F;
+	public  double  disp_scale = 0.3F;
 	
 	
 	public void paint(Graphics g) {
@@ -120,5 +122,42 @@ public class SimulationScreen extends Canvas implements KeyListener{
 		if (e.getKeyChar() =='q') {
 			qPressed = false;
 		}
+	}
+
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	
+	}
+
+	
+	boolean holdingMouse = false;
+	@Override
+	public void mousePressed(MouseEvent e) {
+		
+		if (e.getButton() == MouseEvent.BUTTON3) {
+				
+		 	holdingMouse = true;
+		}
+	}
+
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON3) {
+		 	holdingMouse = false;
+		}
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		
+	}
+
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		
 	}
 }

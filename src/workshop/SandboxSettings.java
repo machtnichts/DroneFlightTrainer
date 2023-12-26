@@ -34,7 +34,7 @@ public class SandboxSettings {
 	public static int simulationSteps = 500;
 
 	/* A factor that increases the simulationSteps value over the generation count*/
-	public static float additionalSimulationStepsPerGeneration = 0.0F;
+	public static float additionalSimulationStepsPerGeneration = 0.02F;
 
 	/* The scale of the hidden layer of the neural network */
 	public static int hiddenLayerSize = 2;
