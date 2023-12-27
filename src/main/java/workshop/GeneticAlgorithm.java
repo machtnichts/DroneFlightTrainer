@@ -6,7 +6,7 @@ import sandbox.SimulationBot;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class GeneticAlgorithim {
+public class GeneticAlgorithm {
 
   public final int populationSize = 100;
   public ArrayList<Bot> population = new ArrayList<Bot>();

@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 
 
 import utils.Vector2;
-import workshop.GeneticAlgorithim;
 import workshop.SandboxSettings;
 
 public class SimulationScreen extends Canvas implements KeyListener{

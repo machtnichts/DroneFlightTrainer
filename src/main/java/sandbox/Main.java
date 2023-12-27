@@ -2,7 +2,7 @@ package sandbox;
 
 import utils.RunnerTask;
 import utils.Vector2;
-import workshop.GeneticAlgorithim;
+import workshop.GeneticAlgorithm;
 import workshop.SandboxSettings;
 
 import javax.swing.*;
@@ -26,7 +26,7 @@ public class Main {
   private final static NumberFormat numberFormat = new DecimalFormat("#0.000", new DecimalFormatSymbols(Locale.ROOT));
   private final static NumberFormat numberFormat6 = new DecimalFormat("#0.000000", new DecimalFormatSymbols(Locale.ROOT));
   public static SimulationScreen screen;
-  public static GeneticAlgorithim geneticAlgorithim = new GeneticAlgorithim();
+  public static GeneticAlgorithm geneticAlgorithim = new GeneticAlgorithm();
   public static ArrayList<Double> plotScores = new ArrayList<>();
   public static ArrayList<Color> plotColors = new ArrayList<>();
   public static Scatterplot plot;
