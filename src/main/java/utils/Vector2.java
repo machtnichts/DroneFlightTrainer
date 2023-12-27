@@ -37,8 +37,8 @@ public class Vector2 {
   }
 
   public static double getAngle(Vector2 v1, Vector2 v2) {
-    var angle = Math.toDegrees(Math.atan2(v2.y, v2.x) - Math.atan2(v1.y, v1.x));
-    //var angle = Math.toDegrees(DSPFast.atan2(v2.y, v2.x) - DSPFast.atan2(v1.y, v1.x));
+    //var angle = Math.toDegrees(Math.atan2(v2.y, v2.x) - Math.atan2(v1.y, v1.x));
+    var angle = Math.toDegrees(DSPFast.atan2(v2.y, v2.x) - DSPFast.atan2(v1.y, v1.x));
 
     return angle;
     //return dotProduct(v1, v2)/(v1.magnitude()*v2.magnitude());
