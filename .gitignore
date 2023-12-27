@@ -42,3 +42,4 @@ bin/sandbox/Main.class
 bin/sandbox/Main$1.class
 bin/sandbox/Bot.class
 bin/
+/target/
