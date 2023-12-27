@@ -1,6 +1,6 @@
 package sandbox;
 
-import utils.RunnerTruck;
+import utils.RunnerTask;
 import utils.Vector2;
 import workshop.GeneticAlgorithim;
 import workshop.SandboxSettings;
@@ -64,7 +64,7 @@ public class Main {
     geneticAlgorithim.initPopulation();
     screen = initScreen();
 
-    new RunnerTruck(0, 1) {
+    new RunnerTask(0, 1) {
       int currentTick = 0;
       int genNumber = 0;
       Vector2 targetVel = new Vector2(0, 0);
