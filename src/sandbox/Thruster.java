@@ -43,6 +43,10 @@ public class Thruster {
 		return botPos.add(Vector2.turnDeg(pos, Vector2.getAngle(bot.getDir(), new Vector2(0,1))));
 	}
 
+	public Vector2 getAbsolutePos2Fast4U(Vector2 botPosition, double botAngle) {
+		return botPosition.add(Vector2.turnDeg(pos, botAngle));
+	}
+
 	public Vector2 getDirection() {
 		return dir;
 	}

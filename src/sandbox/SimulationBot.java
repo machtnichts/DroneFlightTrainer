@@ -8,6 +8,7 @@ import workshop.SandboxSettings;
 
 public class SimulationBot implements Bot {
 
+	private final static Vector2 yVector = new Vector2(0,1);
 	private Color color = Color.getHSBColor((float) Math.random(), 1, 0.8F);
 	private Vector2 pos;
 	private Vector2 startPos;
@@ -182,9 +183,9 @@ public class SimulationBot implements Bot {
 	public Vector2 getAbsoluteCenter() {
 
 		Vector2 center = pos;
+		double angle = Vector2.getAngle(getDir(), yVector);
 		for (Thruster t : getAllTrusters()) {
-
-			center = center.add(t.getAbsolutePos());
+			center = center.add(t.getAbsolutePos2Fast4U(pos,angle));
 		}
 		return center.div(getAllTrusters().size() + 1);
 
@@ -196,9 +197,10 @@ public class SimulationBot implements Bot {
 
 		centerOfMass = centerOfMass.add(pos.sub(subVec).mult((getWeight() / totalWeight)));
 
+		double angle = Vector2.getAngle(getDir(), yVector);
 		for (Thruster t : getAllTrusters()) {
 
-			centerOfMass = centerOfMass.add(t.getAbsolutePos().sub(subVec).mult((t.getWeight() / totalWeight)));
+			centerOfMass = centerOfMass.add(t.getAbsolutePos2Fast4U(getPosition(),angle).sub(subVec).mult((t.getWeight() / totalWeight)));
 		}
 
 		return centerOfMass;
