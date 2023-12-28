@@ -30,16 +30,19 @@ public class Physics {
 		Vector2 center = bot.getAbsoluteCenterOfMass();
 		
 		double totalMomentOfInertia = 0;
+
+		double angle = Vector2.getAngle(bot.getDir(), new Vector2(0,1));
+
 		for (Thruster t : bot.getAllTrusters()) {
 			
-			totalMomentOfInertia += t.getWeight() * Math.pow((center.sub(t.getAbsolutePos()).magnitude()),2);
+			totalMomentOfInertia += t.getWeight() * Math.pow((center.sub(t.getAbsolutePos2(bot.getPosition(),angle)).magnitude()),2);
 		}
 		
 		for (Thruster t : bot.getAllTrusters()) {
 			
 			
 			Vector2 vel = t.getAbsoluteDirection().mult(-t.getCurrentTrust()*t.getMaxTrust());
-			Vector2 aV = t.getAbsolutePos().sub(bot.getAbsoluteCenterOfMass());
+			Vector2 aV = t.getAbsolutePos2(bot.getPosition(),angle).sub(bot.getAbsoluteCenterOfMass());
 
 			totalAngle += Vector2.crossProduct(vel, aV)/totalMomentOfInertia;
 			bot.addVelocity(vel.mult(deltaTime/bot.getTotalWeight()));
