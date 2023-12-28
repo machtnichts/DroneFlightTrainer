@@ -7,7 +7,7 @@ import utils.Vector2;
 public class Physics {
 
 	
-	
+	private final static Vector2 yVector = new Vector2(0,1);
 	
 
 	public static double gravity = -9.81D;
@@ -31,23 +31,19 @@ public class Physics {
 		
 		double totalMomentOfInertia = 0;
 
-		double angle = Vector2.getAngle(bot.getDir(), new Vector2(0,1));
+		double angle = Vector2.getAngle(bot.getDir(), yVector);
 
 		for (Thruster t : bot.getAllTrusters()) {
-			
-			totalMomentOfInertia += t.getWeight() * Math.pow((center.sub(t.getAbsolutePos2(bot.getPosition(),angle)).magnitude()),2);
-		}
-		
-		for (Thruster t : bot.getAllTrusters()) {
-			
-			
+
+			var tAbsolutePos2 = t.getAbsolutePos2(bot.getPosition(),angle);
+			totalMomentOfInertia += t.getWeight() * Math.pow((center.sub(tAbsolutePos2).magnitude()),2);
+
 			Vector2 vel = t.getAbsoluteDirection().mult(-t.getCurrentTrust()*t.getMaxTrust());
-			Vector2 aV = t.getAbsolutePos2(bot.getPosition(),angle).sub(bot.getAbsoluteCenterOfMass());
-
+			Vector2 aV = tAbsolutePos2.sub(bot.getAbsoluteCenterOfMass());
 			totalAngle += Vector2.crossProduct(vel, aV)/totalMomentOfInertia;
 			bot.addVelocity(vel.mult(deltaTime/bot.getTotalWeight()));
 		}
-		
+
 		bot.addMomentum(totalAngle*deltaTime);
 	}
 	
