@@ -37,7 +37,7 @@ public class SimulationScreen extends Canvas implements KeyListener, MouseListen
 
 		int disp = 1000;
 		if (!Main.toggleButton.isSelected()) {
-			for (Bot botL : Main.geneticAlgorithim.population) {
+			for (Bot botL : Main.geneticAlgorithm.population) {
 				SimulationBot bot = (SimulationBot) botL;
 				disp -= 1;
 				if (disp <= 0)
@@ -48,8 +48,8 @@ public class SimulationScreen extends Canvas implements KeyListener, MouseListen
 			}
 		}
 
-		if (Main.geneticAlgorithim.population.size() > 0)
-			drawBot((SimulationBot) Main.geneticAlgorithim.population.get(0), Color.white, g2d);
+		if (Main.geneticAlgorithm.population.size() > 0)
+			drawBot((SimulationBot) Main.geneticAlgorithm.population.get(0), Color.white, g2d);
 
 		g.drawImage(bi, 0, 0, null);
 

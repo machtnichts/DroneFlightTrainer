@@ -2,8 +2,6 @@ package sandbox;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Label;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.text.DecimalFormat;
@@ -16,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -27,10 +24,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JToggleButton;
-import javax.swing.SwingUtilities;
 
 import utils.Vector2;
-import workshop.GeneticAlgorithim;
+import workshop.GeneticAlgorithm;
 import workshop.SandboxSettings;
 import utils.RunnerTask;
 
@@ -38,7 +34,7 @@ public class Main {
 
 	public static SimulationScreen screen;
 
-	public static GeneticAlgorithim geneticAlgorithim = new GeneticAlgorithim();
+	public static GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
 	static int gen = 0;
 	public static ArrayList<Double> plotScores = new ArrayList<Double>();
 	public static ArrayList<Color> plotColors = new ArrayList<Color>();
@@ -54,7 +50,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		random = new Random();
-		geneticAlgorithim.initPopulation();
+		geneticAlgorithm.initPopulation();
 		screen = initScreen();
 
 		new RunnerTask(0, 1) {
@@ -89,7 +85,7 @@ public class Main {
 					bot.getTruster(i).setCurrentTrust(res[i]);
 				}
 
-				geneticAlgorithim.evaluateBot(bot);
+				geneticAlgorithm.evaluateBot(bot);
 
 				Physics.calcPhysics(bot, 0.1D);
 			}
@@ -109,7 +105,7 @@ public class Main {
 				int steps = Math.max(fast - 50, 1);
 				for (int a = 0; a < steps; a++) {
 
-					geneticAlgorithim.population.parallelStream()
+					geneticAlgorithm.population.parallelStream()
 							.filter(SimulationBot.class::isInstance).map(SimulationBot.class::cast)
 							.forEach(bot -> simulateFrame(bot));
 
@@ -117,7 +113,7 @@ public class Main {
 
 					if (currentTick > SandboxSettings.simulationSteps
 							+ gen * SandboxSettings.additionalSimulationStepsPerGeneration) {
-						if (geneticAlgorithim.population.size() <= 0)
+						if (geneticAlgorithm.population.size() <= 0)
 							return;
 
 						calculateLastScore();
@@ -125,8 +121,8 @@ public class Main {
 						currentTick = 0;
 						genNumber += 1;
 						sortPopulation();
-						lastBest = (SimulationBot) geneticAlgorithim.population.get(0);
-						geneticAlgorithim.calculateNextPopulation(gen);
+						lastBest = (SimulationBot) geneticAlgorithm.population.get(0);
+						geneticAlgorithm.calculateNextPopulation(gen);
 
 						updateUI();
 
@@ -155,7 +151,7 @@ public class Main {
 			}
 
 			private void updateUI() {
-				long genPerSecond = (genNumber * 1000L * geneticAlgorithim.population.size())
+				long genPerSecond = (genNumber * 1000L * geneticAlgorithm.population.size())
 							/ Duration.between(start, Instant.now()).toMillis();
 
 				String text;
@@ -228,7 +224,7 @@ public class Main {
 	}
 
 	public static void sortPopulation() {
-		List<SimulationBot> bots = new ArrayList<>(geneticAlgorithim.population.stream()
+		List<SimulationBot> bots = new ArrayList<>(geneticAlgorithm.population.stream()
 				.filter(SimulationBot.class::isInstance).map(SimulationBot.class::cast).collect(Collectors.toList()));
 		insideSort.set(true);
 		try {
@@ -237,14 +233,14 @@ public class Main {
 			System.out.println("sdf");
 		}
 		insideSort.set(false);
-		geneticAlgorithim.population = new ArrayList<>(bots);
+		geneticAlgorithm.population = new ArrayList<>(bots);
 	}
 
 	static SimulationBot lastBest;
 	static double lastScore;
 
 	public static void calculateLastScore() {
-		for (Bot botL : geneticAlgorithim.population) {
+		for (Bot botL : geneticAlgorithm.population) {
 			SimulationBot bot = (SimulationBot) botL;
 			if (SandboxSettings.scoreSetting == ScoreSetting.EXPONENTIALY_WEIGHTED_SCORE) {
 				if (bot.getLastScore() == 0) {
@@ -263,7 +259,7 @@ public class Main {
 
 	public static void resetBots() {
 
-		for (Bot botL : geneticAlgorithim.population) {
+		for (Bot botL : geneticAlgorithm.population) {
 			SimulationBot bot = (SimulationBot) botL;
 			bot.setIterations(bot.getIterations() + 1);
 			bot.setScore(0);
