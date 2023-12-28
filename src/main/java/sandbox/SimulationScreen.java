@@ -68,8 +68,9 @@ public class SimulationScreen extends Canvas implements KeyListener{
 		g2d.setColor(c);
 		
 		drawLine(g2d,Vector2.add( bot.getPosition(), (new Vector2(bot.getAngle())).getNormalized().mult(-RAD)).mult(disp_scale),Vector2.add( bot.getPosition(), (new Vector2(bot.getAngle())).getNormalized().mult(RAD)).mult(disp_scale) );
+		double angle = Vector2.getAngle(bot.getDir(), new Vector2(0,1));
 		for (Thruster t : bot.getAllTrusters()) {
-			Vector2 pos = t.getAbsolutePos();
+			Vector2 pos = t.getAbsolutePos2(bot.getPosition(),angle);
 			//Vector2 ruler = Vector2.turnDeg(new Vector2(0, SQR), Vector2.getAngle(new Vector2(0, 1),t.getDirection()));
 			Vector2 ruler = t.getAbsoluteDirection().getNormalized().mult(SQR);
 			g2d.setColor(c);
