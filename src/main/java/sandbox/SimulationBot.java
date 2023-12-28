@@ -225,10 +225,10 @@ public class SimulationBot implements Bot {
 
 
     absoluteCenterOfMass = absoluteCenterOfMass.add(pos.sub(subVec).mult((getWeight() / totalWeight)));
-
+    double angle = Vector2.getAngle(getDir(), yVector);
     for (Thruster t : getAllTrusters()) {
 
-      absoluteCenterOfMass = absoluteCenterOfMass.add(t.getAbsolutePos().sub(subVec).mult((t.getWeight() / totalWeight)));
+      absoluteCenterOfMass = absoluteCenterOfMass.add(t.getAbsolutePos2(getPosition(),angle).sub(subVec).mult((t.getWeight() / totalWeight)));
     }
 
     return absoluteCenterOfMass;
