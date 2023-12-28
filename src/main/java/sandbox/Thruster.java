@@ -3,7 +3,6 @@ package sandbox;
 import utils.Vector2;
 
 public class Thruster {
-	
 	SimulationBot bot;
 	Vector2 pos;
 	Vector2 dir;
@@ -41,6 +40,10 @@ public class Thruster {
 		Vector2 botPos = bot.getPosition();
 		
 		return botPos.add(Vector2.turnDeg(pos, Vector2.getAngle(bot.getDir(), new Vector2(0,1))));
+	}
+
+	public Vector2 getAbsolutePos2(Vector2 botPosition, double botAngle) {
+		return botPosition.add(Vector2.turnDeg(pos, botAngle));
 	}
 
 	public Vector2 getDirection() {

@@ -26,6 +26,8 @@ public class SimulationBot implements Bot {
   private double score = 0;
   private double iterations = 0;
 
+  private final static Vector2 yVector = new Vector2(0,1);
+
 
   public SimulationBot(Vector2 position, Vector2 upDirection) {
     this.pos = position.clone();
@@ -205,12 +207,11 @@ public class SimulationBot implements Bot {
   }
 
   public Vector2 getAbsoluteCenter() {
-
-
     Vector2 center = pos;
+    double angle = Vector2.getAngle(getDir(), yVector);
     for (Thruster t : getAllTrusters()) {
-
-      center = center.add(t.getAbsolutePos());
+      Vector2 tPos = t.getAbsolutePos2(pos,angle);
+      center = center.add(tPos);
     }
     return center.div(getAllTrusters().size() + 1);
 
@@ -219,6 +220,7 @@ public class SimulationBot implements Bot {
   public Vector2 getAbsoluteCenterOfMass() {
 
     Vector2 subVec = getAbsoluteCenter();
+
     Vector2 absoluteCenterOfMass = subVec.clone();
 
 
