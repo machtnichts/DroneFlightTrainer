@@ -287,6 +287,7 @@ public class Main {
 		shiftSlider.setMinorTickSpacing(0);
 		shiftSlider.setPaintTicks(true);
 		shiftSlider.setPaintLabels(true);
+		shiftSlider.setValue(shiftSlider.getMaximum());
 
 		textLabel = new JLabel("Waiting for something to happen", JLabel.CENTER);
 		textLabel.setFont(textLabel.getFont().deriveFont(16.0f));

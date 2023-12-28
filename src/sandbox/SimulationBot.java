@@ -192,7 +192,7 @@ public class SimulationBot implements Bot {
 
 	public Vector2 getAbsoluteCenterOfMass() {
 		Vector2 subVec = getAbsoluteCenter();
-		Vector2 centerOfMass = getAbsoluteCenter();
+		Vector2 centerOfMass = subVec;
 
 		centerOfMass = centerOfMass.add(pos.sub(subVec).mult((getWeight() / totalWeight)));
 
